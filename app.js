@@ -18,11 +18,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-app.use((req, res) => {
-  res.status(404).json({
-    status: false,
-    message: "您的路由不存在",
-  });
+app.use((req, res, next) => {
+  next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
 });
 
 module.exports = app;
