@@ -19,6 +19,8 @@
     "dotenv": "^16.0.1",
     "express": "~4.16.1",
     "express-validator": "^6.14.1",
+    "http-status": "^1.5.2",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.5",
     "morgan": "^1.9.1",
