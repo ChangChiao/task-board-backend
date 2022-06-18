@@ -70,7 +70,10 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
+userSchema.plugin(toJSON);
+userSchema.plugin(paginate);
+
+
 
 //TODO schema檢查
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
@@ -95,4 +98,6 @@ userSchema.pre("save", async function (next) {
   }
   next();
 });
+
+const User = mongoose.model("User", userSchema);
 module.exports = User;
