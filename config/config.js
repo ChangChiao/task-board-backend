@@ -24,6 +24,8 @@ const envVarsSchema = Joi.object()
     GOOGLE_REFRESH_TOKEN: Joi.string().description("token for google"),
     FACEBOOK_CLIENT_ID: Joi.string().description("clientId for fb"),
     FACEBOOK_CLIENT_SECRET: Joi.string().description("secret for fb"),
+    CALLBACK_URL: Joi.string().description("callbackurl for oauth"),
+    FRONTEND_URL: Joi.string().description("website url"),
   })
   .unknown();
 
@@ -66,4 +68,6 @@ module.exports = {
     client_id: envVars.FACEBOOK_CLIENT_ID,
     client_secret: envVars.FACEBOOK_CLIENT_SECRET,
   },
+  callback: envVars.CALLBACK_URL,
+  frontEnd: envVars.FRONTEND_URL
 };
