@@ -58,9 +58,9 @@ module.exports = {
     },
   },
   google: {
-    client_id: envVars.GOOGLE_CLIENT_ID,
-    client_secret: envVars.GOOGLE_CLIENT_SECRET,
-    refresh_token: envVars.GOOGLE_REFRESH_TOKEN,
+    clientId: envVars.GOOGLE_CLIENT_ID,
+    clientSecret: envVars.GOOGLE_CLIENT_SECRET,
+    refreshToken: envVars.GOOGLE_REFRESH_TOKEN,
   },
   fb: {
     client_id: envVars.FACEBOOK_CLIENT_ID,

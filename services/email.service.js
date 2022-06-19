@@ -1,8 +1,17 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
+console.log('config.email.smtp', config.email.smtp);
 
-const transport = nodemailer.createTransport(config.email.smtp);
+const emailConfig = {
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    ...config.email.smtp,
+    ...config.google,
+  },
+}
+const transport = nodemailer.createTransport(emailConfig);
 /* istanbul ignore next */
 if (config.env !== 'test') {
   transport
