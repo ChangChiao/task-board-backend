@@ -18,7 +18,7 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
     JWT_EXPIRES_DAY: Joi.number().default(3).description("JWT expire days"),
     SMTP_USERNAME: Joi.string().description("username for email server"),
-    SMTP_PASSWORD: Joi.string().description("password for email server"),
+    EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
     GOOGLE_CLIENT_ID: Joi.string().description("clientId for google"),
     GOOGLE_CLIENT_SECRET: Joi.string().description("secret for google"),
     GOOGLE_REFRESH_TOKEN: Joi.string().description("token for google"),
@@ -54,8 +54,8 @@ module.exports = {
   email: {
     smtp: {
       user: envVars.SMTP_USERNAME,
-      pass: envVars.SMTP_PASSWORD,
     },
+    from: envVars.EMAIL_FROM
   },
   google: {
     clientId: envVars.GOOGLE_CLIENT_ID,
