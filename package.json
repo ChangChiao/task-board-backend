@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./index.js",
-    "start:dev": "NODE_ENV=dev node ./index.js",
+    "start:dev": "NODE_ENV=development node ./index.js",
     "start:pro": "NODE_ENV=production node ./index.js",
     "lint": "eslint . --ext .js --fix --ignore-path .gitignore"
   },
