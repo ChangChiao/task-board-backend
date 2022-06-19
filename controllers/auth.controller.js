@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const {
+  oauthService,
   authService,
   userService,
   tokenService,
@@ -27,7 +28,7 @@ const loginByGoogle = catchAsync(async (req, res) => {
     name: req.user.name,
     picture: req.user.picture,
   };
-  thirdPartySignIn('google', data, res);
+  oauthService.thirdPartySignIn('google', data, res);
 });
 
 const logout = catchAsync(async (req, res) => {

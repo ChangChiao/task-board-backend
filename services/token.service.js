@@ -13,7 +13,7 @@ const { tokenTypes } = require("../config/tokens");
  * @returns {string}
  */
 const generateToken = (user, res) => {
-  const token = jwt.sign({ id: user._id }, config.jwt.expires, {
+  const token = jwt.sign({ id: user._id }, config.jwt.secret, {
     expiresIn: config.jwt.expires,
   });
   return token;

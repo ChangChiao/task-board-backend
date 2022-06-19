@@ -3,6 +3,7 @@ const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
 
+
 let server;
 mongoose.connect(config.mongoose.url).then(() => {
   logger.info('Connected to MongoDB');
@@ -11,6 +12,7 @@ mongoose.connect(config.mongoose.url).then(() => {
   });
 });
 
+require('./config/passport')
 
 const exitHandler = () => {
   if (server) {

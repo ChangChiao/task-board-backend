@@ -1,7 +1,7 @@
 const uuid = require("uuid");
 const bcrypt = require("bcrypt");
 const config = require('../config/config')
-const User = require("../models/userModel");
+const { User } = require("../models");
 const { generateToken } = require("./token.service");
 
 
@@ -31,4 +31,6 @@ const thirdPartySignIn = async (thirdPartyName, data, res) => {
   thirdPartyRedirect(user, res);
 };
 
-module.exports = thirdPartySignIn;
+module.exports = {
+    thirdPartySignIn
+};

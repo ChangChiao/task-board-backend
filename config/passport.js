@@ -1,6 +1,7 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const config = require('./config');
 const { tokenTypes } = require('./tokens');
+const passport = require('passport');
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const { User } = require('../models');
 
@@ -9,9 +10,9 @@ passport.use(
     {
       clientID: config.google.clientId,
       clientSecret: config.google.clientSecret,
-      callbackURL: `${config.callback}/users/google/callback`
+      callbackURL: `${config.callback}/v1/auth/google/callback`
     },
-    (accessToken, refreshToken, profile, cb) => cb(null, profile[_json])
+    (accessToken, refreshToken, profile, cb) => cb(null, profile._json)
   )
 );
 
@@ -42,3 +43,4 @@ const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 module.exports = {
   jwtStrategy,
 };
+

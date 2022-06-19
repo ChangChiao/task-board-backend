@@ -4,7 +4,7 @@ const validate = require("../middlewares/validate");
 const authValidation = require("../validations/auth.validation");
 const authController = require("../controllers/auth.controller");
 const auth = require("../middlewares/auth");
-
+const catchAsync = require("../utils/catchAsync");
 const router = express.Router();
 
 // google登入
@@ -17,7 +17,7 @@ router.get(
 
 router.get('/google/callback', passport.authenticate('google', {
     session: false,
-  }), handleErrorAsync(authController.loginByGoogle));
+  }), catchAsync(authController.loginByGoogle));
 
 
 router.post(
