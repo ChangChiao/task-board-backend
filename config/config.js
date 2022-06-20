@@ -65,8 +65,8 @@ module.exports = {
     refreshToken: envVars.GOOGLE_REFRESH_TOKEN,
   },
   fb: {
-    client_id: envVars.FACEBOOK_CLIENT_ID,
-    client_secret: envVars.FACEBOOK_CLIENT_SECRET,
+    clientId: envVars.FACEBOOK_CLIENT_ID,
+    clientSecret: envVars.FACEBOOK_CLIENT_SECRET,
   },
   callback: envVars.CALLBACK_URL,
   frontEnd: envVars.FRONTEND_URL

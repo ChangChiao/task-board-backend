@@ -16,6 +16,17 @@ passport.use(
   )
 );
 
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: config.fb.clientId,
+      clientSecret: config.fb.clientSecret,
+      callbackURL: `${config.callback}/v1/auth/facebook/callback`,
+      profileFields: ['id', 'displayName', 'photos', 'email'],
+    },
+    ((accessToken, refreshToken, profile, cb) => cb(null, profile[jsonPath])),
+  ),
+);
 
 
 const jwtOptions = {

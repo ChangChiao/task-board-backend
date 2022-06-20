@@ -4,6 +4,10 @@ const config = require('../config/config')
 const { User } = require("../models");
 const { generateToken } = require("./token.service");
 
+const thirdPartyObj = {
+  google: "googleId",
+  faceBook: "facebookId"
+}
 
 const thirdPartyRedirect = (user, res) => {
     const token = generateToken(user, res)
@@ -14,7 +18,7 @@ const thirdPartyRedirect = (user, res) => {
 const thirdPartySignIn = async (thirdPartyName, data, res) => {
   const { id, email, name, picture } = data;
 
-  const userExisted = await User.findOne({ googleId: id });
+  const userExisted = await User.findOne({ [thirdPartyObj[thirdPartyName]]: id });
 
   if (!userExisted) {
     const randomPassword = uuid.v4();

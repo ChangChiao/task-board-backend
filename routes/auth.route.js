@@ -1,5 +1,5 @@
 const express = require("express");
-const passport = require('passport');
+const passport = require("passport");
 const validate = require("../middlewares/validate");
 const authValidation = require("../validations/auth.validation");
 const authController = require("../controllers/auth.controller");
@@ -15,10 +15,24 @@ router.get(
   })
 );
 
-router.get('/google/callback', passport.authenticate('google', {
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
     session: false,
-  }), catchAsync(authController.loginByGoogle));
+  }),
+  authController.signInByGoogle
+);
 
+router.get("/facebook", passport.authenticate("facebook"));
+// facebook callback
+
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", {
+    session: false,
+  }),
+  authController.signInByFacebook
+);
 
 router.post(
   "/register",

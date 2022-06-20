@@ -21,14 +21,26 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
-const loginByGoogle = catchAsync(async (req, res) => {
+const signInByGoogle = catchAsync(async (req, res) => {
+  const { sub, email, name, picture } = req.user;
   const data = {
-    id: req.user.sub,
-    email: req.user.email,
-    name: req.user.name,
-    picture: req.user.picture,
+    id: sub,
+    email,
+    name,
+    picture,
   };
-  oauthService.thirdPartySignIn('google', data, res);
+  oauthService.thirdPartySignIn("google", data, res);
+});
+
+const signInByFacebook = catchAsync(async (req, res) => {
+  const { id, email, name, picture } = req.user;
+  const data = {
+    id,
+    email,
+    name,
+    picture,
+  };
+  oauthService.thirdPartySignIn("facebook", data, res);
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -74,7 +86,8 @@ module.exports = {
   refreshTokens,
   forgotPassword,
   resetPassword,
-  loginByGoogle,
+  signInByGoogle,
+  signInByFacebook,
   sendVerificationEmail,
   verifyEmail,
 };
