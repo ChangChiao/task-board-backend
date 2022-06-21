@@ -3,6 +3,7 @@ const config = require('./config');
 const { tokenTypes } = require('./tokens');
 const passport = require('passport');
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const { User } = require('../models');
 
 passport.use(
