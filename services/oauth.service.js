@@ -14,7 +14,6 @@ const thirdPartyRedirect = (user, res) => {
 const thirdPartySignIn = async (thirdPartyName, data, res) => {
   const { id, email, name, picture } = data;
   let user = await User.findOne({ email });
-  console.log(`${thirdPartyName}Id`, 877);
   if (!user) {
     const randomPassword = uuid.v4();
     const password = await bcrypt.hash(randomPassword, 12);
