@@ -24,8 +24,9 @@ passport.use(
       clientSecret: config.fb.clientSecret,
       callbackURL: `${config.callback}/v1/auth/facebook/callback`,
       profileFields: ['id', 'displayName', 'photos', 'email'],
+      scope: ["email"],
     },
-    ((accessToken, refreshToken, profile, cb) => cb(null, profile[jsonPath])),
+    ((accessToken, refreshToken, profile, cb) => cb(null, profile._json)),
   ),
 );
 

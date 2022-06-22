@@ -38,7 +38,7 @@ const signInByFacebook = catchAsync(async (req, res) => {
     id,
     email,
     name,
-    picture,
+    picture: picture.data.url,
   };
   oauthService.thirdPartySignIn("facebook", data, res);
 });
