@@ -6,7 +6,10 @@ const { userService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  res.status(httpStatus.CREATED).send(user);
+  res.status(httpStatus.CREATED).send({
+    user,
+    message: '已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。'
+  });
 });
 
 const getUsers = catchAsync(async (req, res) => {

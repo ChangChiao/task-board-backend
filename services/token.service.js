@@ -19,6 +19,27 @@ const generateToken = (user, res) => {
   return token;
 };
 
+export const generateVerifyCode = () => {
+  const token = jwt.sign({ id: user._id, email }, config.jwt.secret, {
+    expiresIn: '1d',
+  });
+  return token;
+}
+
+export const verifyCode = (code) => {
+  return new Promise((resolve)=>{
+    jwt.verify(code, process.env.JWT_SECRET, (error, payload) => {
+      if (error) {
+        res.sendFile(
+          path.join(__dirname, '../public/emailCheckFailed.html'),
+        );
+      } else {
+        resolve(payload);
+      }
+    });
+  })
+}
+
 /**
  * Save a token
  * @param {string} token

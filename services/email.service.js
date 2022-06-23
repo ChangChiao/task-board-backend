@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
 console.log('config.email.smtp', config.email.smtp);
-
+const ApiError = require("../utils/ApiError");
 const emailConfig = {
   service: 'gmail',
   auth: {
@@ -27,9 +27,12 @@ if (config.env !== 'test') {
  * @param {string} text
  * @returns {Promise}
  */
-const sendEmail = async (to, subject, text) => {
-  const msg = { from: config.email.from, to, subject, text };
-  await transport.sendMail(msg);
+const sendEmail = async ({to, subject, text}) => {
+  const msg = { from: config.email.smtp.user, to, subject, text };
+  const result = await transport.sendMail(msg);
+  if (!result.startsWith('250 2.0.0 OK')) {
+    throw new ApiError(422, '寄送確認信件失敗，請嘗試其他信箱');
+  }
 };
 
 /**
