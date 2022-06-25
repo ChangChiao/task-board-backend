@@ -29,7 +29,9 @@ if (config.env !== 'test') {
  */
 const sendEmail = async ({to, subject, text}) => {
   const msg = { from: config.email.smtp.user, to, subject, text };
+  console.log('msg', msg);
   const result = await transport.sendMail(msg);
+  console.log('result', result);
   if (!result.startsWith('250 2.0.0 OK')) {
     throw new ApiError(422, '寄送確認信件失敗，請嘗試其他信箱');
   }

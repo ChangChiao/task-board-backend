@@ -11,7 +11,8 @@ const tokenService = require("./token.service")
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await User.isEmailTaken(userBody.email)) {
+  const userData = await User.findOne({ email }).select('+activeStatus');
+  if (userData.activeStatus === 'meta' || userData.activeStatus === 'both') {
     throw new ApiError(httpStatus.BAD_REQUEST, "信箱已經註冊");
   }
   console.log('emailService', emailService);
@@ -22,9 +23,20 @@ const createUser = async (userBody) => {
     to: userBody.email,
     text: `親愛用戶您好！點選連結即可啟用您的 TaskBoard 帳號，[${config.callback}/users/checkCode?code=${activeCode}] 為保障您的帳號安全，請在24小時內點選該連結`,
   };
+
+  const password = await bcrypt.hash(req.body.password, 12);
+  let user = {}
+  if (!userData) {
+    userBody.name = `使用者${uuid.v1()}`
+    userBody.password = password
+    user = await User.create(userBody);
+  } else {
+    user = await User.findByIdAndUpdate(userData._id, { password });
+  }
+
   await emailService.sendEmail(mailObj);
-  userBody.name = `使用者${uuid.v1()}`
-  return User.create(userBody);
+  
+  return user;
 };
 
 /**
