@@ -4,6 +4,7 @@ const httpStatus = require("http-status");
 const config = require("../config/config");
 const userService = require("./user.service");
 const { Token } = require("../models");
+const path = require('path');
 const ApiError = require("../utils/ApiError");
 const { tokenTypes } = require("../config/tokens");
 
@@ -19,14 +20,14 @@ const generateToken = (user, res) => {
   return token;
 };
 
-export const generateVerifyCode = () => {
-  const token = jwt.sign({ id: user._id, email }, config.jwt.secret, {
+const generateVerifyCode = (email) => {
+  const token = jwt.sign({ email }, config.jwt.secret, {
     expiresIn: '1d',
   });
   return token;
 }
 
-export const verifyCode = (code) => {
+const verifyCode = (code) => {
   return new Promise((resolve)=>{
     jwt.verify(code, process.env.JWT_SECRET, (error, payload) => {
       if (error) {
@@ -63,18 +64,8 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
 /**
  * Verify token and return token doc (or throw an error if it is not valid)
  * @param {string} token
- * @param {string} type
  * @returns {Promise<Token>}
  */
-// const verifyToken = async (token, type) => {
-//   const payload = jwt.verify(token, config.jwt.secret);
-//   //   const tokenDoc = await Token.findOne({ token, type, user: payload.sub });
-//   if (!tokenDoc) {
-//     throw new Error("Token not found");
-//   }
-//   return tokenDoc;
-// };
-
 const verifyToken = async (token) => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, config.jwt.secret, (error, payload) => {
@@ -181,6 +172,8 @@ const generateVerifyEmailToken = async (user) => {
 module.exports = {
   generateToken,
   saveToken,
+  generateVerifyCode,
+  verifyCode,
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,

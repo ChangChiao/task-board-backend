@@ -1,9 +1,10 @@
 const httpStatus = require("http-status");
+const uuid = require("uuid");
 const { User } = require("../models");
 const ApiError = require("../utils/ApiError");
-const { sendEmail } = require("./email.service");
+const emailService = require("./email.service");
 const config = require("../config/config");
-const { generateVerifyCode } = require("./token.service")
+const tokenService = require("./token.service")
 /**
  * Create a user
  * @param {Object} userBody
@@ -13,13 +14,16 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, "信箱已經註冊");
   }
-  const activeCode = generateVerifyCode();
+  console.log('emailService', emailService);
+  console.log('tokenService--', tokenService);
+  const activeCode = tokenService.generateVerifyCode(userBody.email);
   const mailObj = {
     subject: "[TaskBoard]帳號啟用確認信",
     to: userBody.email,
     text: `親愛用戶您好！點選連結即可啟用您的 TaskBoard 帳號，[${config.callback}/users/checkCode?code=${activeCode}] 為保障您的帳號安全，請在24小時內點選該連結`,
   };
-  await sendEmail(mailObj);
+  await emailService.sendEmail(mailObj);
+  userBody.name = `使用者${uuid.v1()}`
   return User.create(userBody);
 };
 
@@ -51,7 +55,7 @@ const getUserById = async (id) => {
  * @param {string} email 
  * @returns {Boolean}
  */
-const checkUserStatus = (email) => {
+const checkUserStatus = async (email) => {
     const result = await User.findOne({ email }).select("isEmailVerified");
     if(!result){
         throw new Error(`您尚未驗證信箱`);
