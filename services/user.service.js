@@ -5,14 +5,16 @@ const ApiError = require("../utils/ApiError");
 const emailService = require("./email.service");
 const config = require("../config/config");
 const tokenService = require("./token.service")
+const bcrypt = require('bcrypt');
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  const userData = await User.findOne({ email }).select('+activeStatus');
-  if (userData.activeStatus === 'meta' || userData.activeStatus === 'both') {
+  const userData = await User.findOne({ email: userBody.email });
+  console.log('userData', userData);
+  if (userData?.activeStatus === 'normal' || userData?.activeStatus === 'both') {
     throw new ApiError(httpStatus.BAD_REQUEST, "信箱已經註冊");
   }
   console.log('emailService', emailService);
@@ -21,10 +23,10 @@ const createUser = async (userBody) => {
   const mailObj = {
     subject: "[TaskBoard]帳號啟用確認信",
     to: userBody.email,
-    text: `親愛用戶您好！點選連結即可啟用您的 TaskBoard 帳號，[${config.callback}/users/checkCode?code=${activeCode}] 為保障您的帳號安全，請在24小時內點選該連結`,
+    text: `親愛用戶您好！點選連結即可啟用您的 TaskBoard 帳號，[${config.callback}/v1/auth/verify-email?code=${activeCode}] 為保障您的帳號安全，請在24小時內點選該連結`,
   };
 
-  const password = await bcrypt.hash(req.body.password, 12);
+  const password = await bcrypt.hash(userBody.password, 12);
   let user = {}
   if (!userData) {
     userBody.name = `使用者${uuid.v1()}`
@@ -80,8 +82,8 @@ const checkUserStatus = async (email) => {
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+const getUserByEmail = async (email, field) => {
+  return User.findOne({ email }).select(field);;
 };
 
 /**

@@ -1,4 +1,6 @@
 const httpStatus = require("http-status");
+const path = require("path");
+const { User } = require("../models");
 const catchAsync = require("../utils/catchAsync");
 const {
   oauthService,
@@ -76,7 +78,8 @@ const sendVerificationEmail = catchAsync(async (req, res) => {
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
-  const user = await authService.verifyEmail(req.query.code);
+  const user = await authService.verifyEmail(req.query.code)
+  console.log('user', user);
   if (!user) {
     return res.sendFile(
       path.join(__dirname, "../public/emailCheckFailed.html")
@@ -84,7 +87,7 @@ const verifyEmail = catchAsync(async (req, res) => {
   }
   let activeStatus;
   if (user.activeStatus === "none") {
-    activeStatus = "meta";
+    activeStatus = "normal";
   } else if (user.activeStatus === "third") {
     activeStatus = "both";
   } else {
@@ -92,7 +95,7 @@ const verifyEmail = catchAsync(async (req, res) => {
       path.join(__dirname, "../public/emailCheckFailed.html")
     );
   }
-  await User.findByIdAndUpdate(user_id, {
+  await User.findByIdAndUpdate(user._id, {
     activeStatus,
   });
 

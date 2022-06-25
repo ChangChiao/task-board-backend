@@ -81,7 +81,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 const verifyEmail = async (code, res) => {
   try {
     const verifyEmailTokenDoc = await tokenService.verifyCode(code)
-    const user = await userService.getUserByEmail(verifyEmailTokenDoc.email);
+    const user = await userService.getUserByEmail(verifyEmailTokenDoc.email, '+activeStatus');
     return user
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');

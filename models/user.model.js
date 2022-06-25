@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     },
     activeStatus: {
       type: String,
-      enum: ['none', 'meta', 'third', 'both'],
+      enum: ['none', 'normal', 'third', 'both'],
       default: 'none',
       select: false,
     },
