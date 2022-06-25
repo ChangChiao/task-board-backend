@@ -16,7 +16,7 @@ const register = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  await userService.checkUserStatus(email)
+  await userService.checkUserStatus(email);
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
@@ -76,8 +76,28 @@ const sendVerificationEmail = catchAsync(async (req, res) => {
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.code);
-  res.status(httpStatus.NO_CONTENT).send();
+  const user = await authService.verifyEmail(req.query.code);
+  if (!user) {
+    return res.sendFile(
+      path.join(__dirname, "../public/emailCheckFailed.html")
+    );
+  }
+  let activeStatus;
+  if (user.activeStatus === "none") {
+    activeStatus = "meta";
+  } else if (user.activeStatus === "third") {
+    activeStatus = "both";
+  } else {
+    return res.sendFile(
+      path.join(__dirname, "../public/emailCheckFailed.html")
+    );
+  }
+  await User.findByIdAndUpdate(user_id, {
+    activeStatus,
+  });
+
+  res.sendFile(path.join(__dirname, '../public/emailCheckSuccess.html'));
+  // res.status(httpStatus.NO_CONTENT).send();
 });
 
 module.exports = {
