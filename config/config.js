@@ -18,12 +18,18 @@ const envVarsSchema = Joi.object()
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
     JWT_EXPIRES_DAY: Joi.number().default(3).description("JWT expire days"),
     SMTP_USERNAME: Joi.string().description("username for email server"),
-    EMAIL_FROM: Joi.string().description('the from field in the emails sent by the app'),
+    EMAIL_FROM: Joi.string().description(
+      "the from field in the emails sent by the app"
+    ),
     GOOGLE_CLIENT_ID: Joi.string().description("clientId for google"),
     GOOGLE_CLIENT_SECRET: Joi.string().description("secret for google"),
     GOOGLE_REFRESH_TOKEN: Joi.string().description("token for google"),
     FACEBOOK_CLIENT_ID: Joi.string().description("clientId for fb"),
     FACEBOOK_CLIENT_SECRET: Joi.string().description("secret for fb"),
+    HASHKEY: Joi.string().description("HASHKEY for newebpay"),
+    HASHIV: Joi.string().description("HASHIV for newebpay"),
+    MERCHANTID: Joi.string().description("merchantID for newebpay"),
+    VERSION: Joi.number().description("version for newebpay"),
     CALLBACK_URL: Joi.string().description("callbackurl for oauth"),
     FRONTEND_URL: Joi.string().description("website url"),
   })
@@ -47,7 +53,7 @@ module.exports = {
     secret: envVars.JWT_SECRET,
     expires: envVars.JWT_EXPIRES_DAY,
   },
-  imgur:{
+  imgur: {
     client_id: envVars.IMGUR_CLIENTID,
     client_secret: envVars.IMGUR_CLIENT_SECRET,
     refresh_token: envVars.IMGUR_REFRESH_TOKEN,
@@ -57,7 +63,7 @@ module.exports = {
     smtp: {
       user: envVars.SMTP_USERNAME,
     },
-    from: envVars.EMAIL_FROM
+    from: envVars.EMAIL_FROM,
   },
   google: {
     clientId: envVars.GOOGLE_CLIENT_ID,
@@ -68,6 +74,12 @@ module.exports = {
     clientId: envVars.FACEBOOK_CLIENT_ID,
     clientSecret: envVars.FACEBOOK_CLIENT_SECRET,
   },
+  newebpay: {
+    hashkey: envVars.HASHKEY,
+    hashiv: envVars.HASHIV,
+    merchantID: envVars.merchantID,
+    version: envVars.VERSION
+  },
   callback: envVars.CALLBACK_URL,
-  frontEnd: envVars.FRONTEND_URL
+  frontEnd: envVars.FRONTEND_URL,
 };
