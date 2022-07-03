@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema({
   Amt: {
     type: Number,
     required: [true, "交易金額未填寫"],
-    default: 100,
+    default: 199,
   },
   orderStatus: {
     type: Number,

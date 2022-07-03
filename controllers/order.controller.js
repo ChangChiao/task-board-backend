@@ -6,7 +6,7 @@ const createOrder = catchAsync(async (req, res) => {
   console.log("8777");
   const order = await orderService.createOrder(req.body);
   res.status(httpStatus.CREATED).send({
-    order,
+    data: order,
     message: "訂單建立成功",
   });
 });
@@ -23,7 +23,7 @@ const notifyOrder = catchAsync(async (req, res) => {
   const data = await orderService.notifyOrder(req);
   res.status(httpStatus.CREATED).send({
     data,
-    message: "訂單建立成功",
+    message: "付款成功",
   });
 });
 

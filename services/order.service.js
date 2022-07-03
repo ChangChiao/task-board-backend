@@ -15,6 +15,7 @@ const getOrder = async (req) => {
   const { orderId } = req.params;
   console.log('orderId', orderId);
   const order = await Order.findById(orderId);
+  order.MerchantID = config.newebpay.merchantID;
   console.log('order', order);
   console.log("orderId", orderId);
   //   const param = genDataChain(order);
@@ -31,6 +32,9 @@ const getOrder = async (req) => {
 };
 
 
+const sendData = () => {
+
+}
 
 
 
