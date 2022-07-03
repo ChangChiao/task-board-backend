@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: "user",
+    ref: "User",
     required: [true, "訂單一定要有user"],
   },
   payment: {
@@ -44,7 +44,7 @@ const orderSchema = new mongoose.Schema({
 orderSchema.pre(/^find/, function (next) {
   this.populate({
     path: "user",
-    select: "name _id",
+    select: "email",
   });
 
   next();

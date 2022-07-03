@@ -13,6 +13,7 @@ router
 
   router
   .route('/:orderId')
-  .get(auth(), validate(orderValidation.getOrder), orderController.getOrder)
+  .get(validate(orderValidation.getOrder), orderController.getOrder)
+//   .get(auth(), validate(orderValidation.getOrder), orderController.getOrder)
 
 module.exports = router;

@@ -9,7 +9,7 @@ const createOrder = {
 };
 
 const getOrder = {
-  query: Joi.object().keys({
+  param: Joi.object().keys({
     orderId: Joi.string().required(),
   }),
 };
