@@ -8,7 +8,11 @@ const router = express.Router();
 
 router
   .route('/')
-//   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .post(auth('manageUsers'), validate(orderValidation.createOrder), orderController.createOrder)
+  .post(validate(orderValidation.createOrder), orderController.createOrder)
+//   .post(auth(), validate(orderValidation.createOrder), orderController.createOrder)
+
+  router
+  .route('/:orderId')
+  .get(auth(), validate(orderValidation.getOrder), orderController.getOrder)
 
 module.exports = router;
