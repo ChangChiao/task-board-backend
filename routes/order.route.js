@@ -16,4 +16,8 @@ router
   .get(validate(orderValidation.getOrder), orderController.getOrder)
 //   .get(auth(), validate(orderValidation.getOrder), orderController.getOrder)
 
+router
+.route('/notify')
+.post(orderController.notifyOrder)
+
 module.exports = router;
