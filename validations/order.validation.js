@@ -8,13 +8,7 @@ const createOrder = {
   }),
 };
 
-const getOrder = {
-  param: Joi.object().keys({
-    orderId: Joi.string().required(),
-  }),
-};
 
 module.exports = {
   createOrder,
-  getOrder,
 };

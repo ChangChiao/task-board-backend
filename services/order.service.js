@@ -1,41 +1,33 @@
 const { Order } = require("../models");
 const crypto = require("crypto");
 const config = require("../config/config")
-const createOrder = async (userBody) => {
-  const timestamp = Math.round(new Date().getTime() / 1000);
-  userBody.MerchantOrderNo = timestamp;
-  userBody.TimeStamp = timestamp;
-  userBody.user = "62b7076950b6177e6b2af1f8";
-  console.log("userBody", userBody.user);
-  const order = await Order.create(userBody);
-  return order;
-};
 
-const getOrder = async (req) => {
-  const { orderId } = req.params;
-  console.log('orderId', orderId);
-  const order = await Order.findById(orderId);
+const encryptOrder = async (orderObj) => {
+  const order = JSON.parse(JSON.stringify(orderObj));
   order.MerchantID = config.newebpay.merchantID;
-  console.log('order', order);
-  console.log("orderId", orderId);
-  //   const param = genDataChain(order);
-  const aesEncrypt = create_mpg_aes_encrypt(order);
+  order.Version = config.newebpay.version;
+  const param = genDataChain(order);
+  const aesEncrypt = create_mpg_aes_encrypt(param);
   console.log('aesEncrypt', aesEncrypt); //交易用
   const shaEncrypt =create_mpg_sha_encrypt(aesEncrypt);
   console.log('shaEncrypt', shaEncrypt); //驗證用
-  return {
-    order,
-    aesEncrypt,
-    shaEncrypt
-  }
+  order.TradeInfo = aesEncrypt
+  order.TradeSha = shaEncrypt
+  console.log('%===%%', order);
+  return order
   //TODO email要動態
 };
 
-
-const sendData = () => {
-
-}
-
+const createOrder = async (userBody) => {
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    userBody.MerchantOrderNo = timestamp;
+    userBody.TimeStamp = timestamp;
+    userBody.user = "62b7076950b6177e6b2af1f8";
+    console.log("userBody", userBody.user);
+    const order = await Order.create(userBody);
+    const encrypt = await encryptOrder(order);
+    return encrypt;
+  };
 
 
 const notifyOrder = async(req) => {
@@ -100,6 +92,5 @@ function create_mpg_aes_decrypt(TradeInfo) {
 
 module.exports = {
     createOrder,
-    getOrder,
     notifyOrder
   };

@@ -77,7 +77,7 @@ module.exports = {
   newebpay: {
     hashkey: envVars.HASHKEY,
     hashiv: envVars.HASHIV,
-    merchantID: envVars.merchantID,
+    merchantID: envVars.MERCHANTID,
     version: envVars.VERSION
   },
   callback: envVars.CALLBACK_URL,

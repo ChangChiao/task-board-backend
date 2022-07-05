@@ -11,10 +11,9 @@ router
   .post(validate(orderValidation.createOrder), orderController.createOrder)
 //   .post(auth(), validate(orderValidation.createOrder), orderController.createOrder)
 
-  router
-  .route('/:orderId')
-  .get(validate(orderValidation.getOrder), orderController.getOrder)
-//   .get(auth(), validate(orderValidation.getOrder), orderController.getOrder)
+//   router
+//   .route('/:orderId')
+//   .get(validate(orderValidation.getOrder), orderController.getOrder)
 
 router
 .route('/notify')
