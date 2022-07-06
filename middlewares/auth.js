@@ -4,7 +4,10 @@ const auth = () => async (req, res, next) => {
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', { session: false });
   })
-    .then(() => next())
+    .then((info) => {
+      req._id = info._id
+      next()
+    })
     .catch((err) => next(err));
 };
 
