@@ -13,8 +13,8 @@ router
 
 router
   .route('/:taskId')
-  .get(auth(), validate(userValidation.getUser), taskController.getTaskByUser)
-  .patch(auth(), validate(userValidation.updateUser), taskController.updateTask)
-  .delete(auth(), validate(userValidation.deleteUser), taskController.deleteTask);
+  // .get(auth(), validate(taskValidation.getUser), taskController.getTaskByUser)
+  // .patch(auth(), validate(taskValidation.updateUser), taskController.updateTask)
+  // .delete(auth(), validate(taskValidation.deleteUser), taskController.deleteTask);
 
 module.exports = router;
