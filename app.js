@@ -13,6 +13,8 @@ const routes = require('./routes');
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/user.route");
 
+require("./services/scheduling");
+
 var app = express();
 app.use(logger("dev"));
 

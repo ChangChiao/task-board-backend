@@ -18,6 +18,10 @@ const taskSchema = new mongoose.Schema({
     type: Number,
     default: 168,
   },
+  status:{
+    type: Number,
+    enum: [0, 1, 2]
+  },
   cover:{
     type: String,
     default: 'https://i.imgur.com/gA5JWK5.png',
