@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "https://i.imgur.com/gA5JWK5.png",
     },
+    collect: {
+      type: [mongoose.Schema.ObjectId],
+      default: [],
+    },
     chatRecord: {
       type: [
         {
