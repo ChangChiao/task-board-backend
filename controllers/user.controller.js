@@ -7,8 +7,9 @@ const { userService } = require('../services');
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   res.status(httpStatus.CREATED).send({
-    user,
-    message: '已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。'
+    data: user,
+    status: "success",
+    message: '新增成功'
   });
 });
 
@@ -29,12 +30,19 @@ const getUser = catchAsync(async (req, res) => {
 
 const updateUser = catchAsync(async (req, res) => {
   const user = await userService.updateUserById(req.params.userId, req.body);
-  res.send(user);
+  res.send({
+    data: user,
+    message: "修改成功",
+    status: "success"
+  });
 });
 
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.OK).send({
+    message: "刪除成功",
+    status: "success"
+  });
 });
 
 module.exports = {

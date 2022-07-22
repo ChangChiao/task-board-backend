@@ -13,7 +13,11 @@ const {
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
+  res.status(httpStatus.CREATED).send({
+    data: { user, tokens },
+    message: "註冊成功",
+    status: "success"
+  });
 });
 
 const login = catchAsync(async (req, res) => {
@@ -21,7 +25,11 @@ const login = catchAsync(async (req, res) => {
   await userService.checkUserStatus(email);
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  res.status(httpStatus.OK).send({
+    data: { user, tokens },
+    message: "註冊成功",
+    status: "success"
+  });
 });
 
 const signInByGoogle = catchAsync(async (req, res) => {
@@ -48,7 +56,10 @@ const signInByFacebook = catchAsync(async (req, res) => {
 
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  res.status(httpStatus.NO_CONTENT).send({
+    message: "登出成功",
+    status: "success"
+  });
 });
 
 const refreshTokens = catchAsync(async (req, res) => {

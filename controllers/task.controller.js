@@ -4,17 +4,19 @@ const catchAsync = require("../utils/catchAsync");
 const { taskService } = require("../services");
 const getTask = catchAsync(async (req, res) => {
   const taskList = await taskService.createTask(req.body);
-  res.status(httpStatus.CREATED).send({
+  res.status(httpStatus.OK).send({
     data: taskList,
-    message: "已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。",
+    message: "成功",
+    status: "success"
   });
 });
 
 const getTaskByUser = catchAsync(async (req, res) => {
   const taskList = await taskService.getTaskByUser(req.body);
-  res.status(httpStatus.CREATED).send({
+  res.status(httpStatus.OK).send({
     data: taskList,
-    message: "已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。",
+    message: "成功",
+    status: "success"
   });
 });
 
@@ -22,22 +24,25 @@ const createTask = catchAsync(async (req, res) => {
   const task = await taskService.createTask(req.body);
   res.status(httpStatus.CREATED).send({
     data: task,
-    message: "已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。",
+    message: "新增成功",
+    status: "success"
   });
 });
 
 const updateTask = catchAsync(async (req, res) => {
   const task = await taskService.updateTask(req.body);
-  res.status(httpStatus.CREATED).send({
+  res.status(httpStatus.OK).send({
     data: task,
-    message: "已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。",
+    message: "更新成功。",
+    status: "success"
   });
 });
 
 const deleteTask = catchAsync(async (req, res) => {
   await taskService.deleteTask(req.body);
-  res.status(httpStatus.CREATED).send({
-    message: "已將啟用確認信件寄送至您的信箱，請先啟用再登入，謝謝。",
+  res.status(httpStatus.OK).send({
+    message: "刪除成功",
+    status: "success"
   });
 });
 

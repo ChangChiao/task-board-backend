@@ -7,6 +7,7 @@ const addCollect = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({
     data,
     message: "新增成功",
+    status: "success"
   });
 });
 
@@ -16,6 +17,7 @@ const removeCollect = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({
     data,
     message: "移除成功",
+    status: "success"
   });
 });
 
