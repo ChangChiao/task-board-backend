@@ -15,7 +15,7 @@ const createOrder = catchAsync(async (req, res) => {
 
 const notifyOrder = catchAsync(async (req, res) => {
   const data = await orderService.notifyOrder(req);
-  res.status(httpStatus.CREATED).send({
+  res.status(httpStatus.OK).send({
     data,
     message: "付款成功",
     status: "success"
