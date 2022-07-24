@@ -5,6 +5,7 @@ const passport = require('passport');
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const { User } = require('../models');
+const { log } = require('./logger');
 
 passport.use(
   new GoogleStrategy(
@@ -34,21 +35,23 @@ passport.use(
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  // jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('JWT')
 };
-
 const jwtVerify = async (payload, done) => {
   console.log("payload", payload)
   try {
-    if (payload.type !== tokenTypes.ACCESS) {
-      throw new Error('Invalid token type');
-    }
-    const user = await User.findById(payload.sub);
+    // if (payload.type !== tokenTypes.ACCESS) {
+    //   throw new Error('Invalid token type');
+    // }
+    console.log('dxxx');
+    const user = await User.findById(payload.id);
     console.log('user', user);
     if (!user) {
       return done(null, false);
     }
     done(null, user);
   } catch (error) {
+    console.log('7777');
     done(error, false);
   }
 };

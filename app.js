@@ -34,7 +34,6 @@ app.use(cors());
 app.options("*", cors());
 
 app.use(passport.initialize());
-console.log('passssss', jwtStrategy);
 passport.use('jwt', jwtStrategy);
 
 

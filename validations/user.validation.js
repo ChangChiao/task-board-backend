@@ -10,16 +10,16 @@ const createUser = {
   }),
 };
 
-const getUser = {
-  body: Joi.object().keys({
-    token:  Joi.string().required(),
-    // name: Joi.string(),
-    // role: Joi.string(),
-    // sortBy: Joi.string(),
-    // limit: Joi.number().integer(),
-    // page: Joi.number().integer(),
-  }),
-};
+// const getUser = {
+//   body: Joi.object().keys({
+//     token:  Joi.string().required(),
+//     name: Joi.string(),
+//     role: Joi.string(),
+//     sortBy: Joi.string(),
+//     limit: Joi.number().integer(),
+//     page: Joi.number().integer(),
+//   }),
+// };
 
 const getUserById = {
   params: Joi.object().keys({
@@ -48,7 +48,7 @@ const deleteUser = {
 
 module.exports = {
   createUser,
-  getUser,
+  // getUser,
   getUserById,
   updateUser,
   deleteUser,

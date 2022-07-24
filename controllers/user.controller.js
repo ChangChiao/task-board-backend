@@ -18,8 +18,9 @@ const getUser = catchAsync(async (req, res) => {
   // const options = pick(req.query, ["sortBy", "limit", "page"]);
   // const result = await userService.queryUsers(filter, options);
   // res.send(result);
-  console.log('97777')
-  const user = await userService.getUserById(req.userId);
+  console.log('97777', req.user)
+  const userId = req.user?._id;
+  const user = await userService.getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }

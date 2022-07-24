@@ -3,8 +3,9 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
-  console.log('err', err, info ,user);
+  // console.log('err', err);
   if (err || info || !user) {
+    console.log("66666", info);
     return reject(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
   }
   req.user = user;
@@ -12,11 +13,14 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
 };
 
 const auth = () => async (req, res, next) => {
-  console.log("auth", auth);
   return new Promise((resolve, reject) => {
-    passport.authenticate("jwt", { session: false }, verifyCallback(req, resolve, reject));
+    passport.authenticate(
+      "jwt",
+      { session: false },
+      verifyCallback(req, resolve, reject)
+    )(req, res, next);
   })
-    .then((info) => {
+    .then(() => {
       next();
     })
     .catch((err) => next(err));

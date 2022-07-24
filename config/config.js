@@ -16,7 +16,7 @@ const envVarsSchema = Joi.object()
     IMGUR_REFRESH_TOKEN: Joi.string().description("refresh token for imgur"),
     IMGUR_ALBUM_ID: Joi.string().description("album for imgur"),
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
-    JWT_EXPIRES_DAY: Joi.number().default(3).description("JWT expire days"),
+    JWT_EXPIRES_DAY: Joi.string().description("JWT expire days"),
     SMTP_USERNAME: Joi.string().description("username for email server"),
     EMAIL_FROM: Joi.string().description(
       "the from field in the emails sent by the app"

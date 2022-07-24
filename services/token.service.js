@@ -21,7 +21,7 @@ const generateToken = (user, res) => {
 
 const generateVerifyCode = (email) => {
   const token = jwt.sign({ email }, config.jwt.secret, {
-    expiresIn: '1d',
+    expiresIn: config.jwt.expires,
   });
   return token;
 }
