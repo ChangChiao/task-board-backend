@@ -2,6 +2,17 @@ const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const collectService = require("../services/collect.service");
 const config = require("../config/config");
+
+const getCollect = catchAsync(async (req, res) => {
+  const data = await collectService.getCollect(req.body);
+  res.status(httpStatus.CREATED).send({
+    data,
+    message: "成功",
+    status: "success"
+  });
+});
+
+
 const addCollect = catchAsync(async (req, res) => {
   const data = await collectService.addCollect(req.body);
   res.status(httpStatus.CREATED).send({
@@ -22,6 +33,7 @@ const removeCollect = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  getCollect,
   addCollect,
   removeCollect,
 };
