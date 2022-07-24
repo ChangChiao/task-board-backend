@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const { toJSON, paginate } = require('./plugins');
+const { string } = require("joi");
 
 const userSchema = new mongoose.Schema(
   {
@@ -52,6 +53,10 @@ const userSchema = new mongoose.Schema(
       type: [mongoose.Schema.ObjectId],
       default: [],
     },
+    isVip:{
+      type: Boolean,
+      default: false
+    },
     chatRecord: {
       type: [
         {
@@ -74,6 +79,10 @@ const userSchema = new mongoose.Schema(
     facebookId: {
       type: String,
       select: false,
+    },
+    contact:{
+      type: String,
+      default: ""
     },
     createdAt: {
       type: Date,
@@ -111,6 +120,9 @@ userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 12);
+  }
+  if(!user.contact){
+    user.contact = user.email;
   }
   next();
 });

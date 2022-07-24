@@ -10,17 +10,18 @@ const createUser = {
   }),
 };
 
-const getUsers = {
-  query: Joi.object().keys({
-    name: Joi.string(),
-    role: Joi.string(),
-    sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer(),
+const getUser = {
+  body: Joi.object().keys({
+    token:  Joi.string().required(),
+    // name: Joi.string(),
+    // role: Joi.string(),
+    // sortBy: Joi.string(),
+    // limit: Joi.number().integer(),
+    // page: Joi.number().integer(),
   }),
 };
 
-const getUser = {
+const getUserById = {
   params: Joi.object().keys({
     userId: Joi.string().custom(objectId),
   }),
@@ -47,8 +48,8 @@ const deleteUser = {
 
 module.exports = {
   createUser,
-  getUsers,
   getUser,
+  getUserById,
   updateUser,
   deleteUser,
 };

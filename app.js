@@ -4,7 +4,9 @@ var cookieParser = require("cookie-parser");
 const compression = require('compression');
 var logger = require("morgan");
 const cors = require("cors");
+const passport = require('passport');
 const config = require("./config/config");
+const { jwtStrategy } = require('./config/passport');
 const httpStatus = require("http-status");
 const ApiError = require("./utils/ApiError");
 const { errorConverter, errorHandler } = require("./middlewares/error");
@@ -21,6 +23,9 @@ app.use(logger("dev"));
 // parse json request body
 app.use(express.json());
 
+// parse urlencoded request body
+app.use(express.urlencoded({ extended: false }));
+
 // gzip compression
 app.use(compression());
 
@@ -28,10 +33,10 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
-// parse urlencoded request body
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(passport.initialize());
+console.log('passssss', jwtStrategy);
+passport.use('jwt', jwtStrategy);
+
 
 
 app.use('/v1', routes);
@@ -40,6 +45,7 @@ app.use('/v1', routes);
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
 });
+
 
 
 app.use(errorConverter);
