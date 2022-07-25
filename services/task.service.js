@@ -1,6 +1,7 @@
 const { Task } = require("../models");
 const getTask = async (userBody) => {
-  const task = await Task.find();
+  const { order, city, keyword } = userBody;
+  const task = await Task.find({city}, {$text:{$search: keyword}}).sort({pay: order === "desc" ? -1 : 1});
   return task;
 };
 

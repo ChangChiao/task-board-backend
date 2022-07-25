@@ -14,7 +14,7 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  reward: {
+  pay: {
     type: Number,
     default: 168,
   },
