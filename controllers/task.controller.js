@@ -32,7 +32,7 @@ const createTask = catchAsync(async (req, res) => {
 
 
 const applyTask = catchAsync(async (req, res) => {
-  await taskService.applyTask(req.params?.taskId);
+  await taskService.applyTask(req);
   res.status(httpStatus.OK).send({
     message: "申請成功",
     status: "success"
@@ -50,7 +50,7 @@ const updateTask = catchAsync(async (req, res) => {
 });
 
 const deleteTask = catchAsync(async (req, res) => {
-  await taskService.deleteTask(req.body);
+  await taskService.deleteTask(req);
   res.status(httpStatus.OK).send({
     message: "刪除成功",
     status: "success"

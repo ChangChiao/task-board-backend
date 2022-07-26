@@ -25,17 +25,26 @@ const updateTask = async (userBody) => {
 const applyTask = async (req) => {
   const taskId = req.params?.taskId;
   const user = req.user._id;
-  const updatedTask = await Task.findByIdAndUpdate(
+  const isExist = await Task.find(
     { _id: taskId },
-    { $push: { applicant: user } }
+    { applicant: { $elemMatch: { $eq: user } } }
   );
-  return updatedTask;
+  if (isExist) {
+    await Task.findByIdAndUpdate(
+      { _id: taskId },
+      { $pull: { applicant: user } }
+    );
+  } else {
+    await Task.findByIdAndUpdate(
+      { _id: taskId },
+      { $push: { applicant: user } }
+    );
+  }
 };
 
-
-
-const deleteTask = async (userBody) => {
-  const task = await Task.findByIdAndDelete(userBody._id);
+const deleteTask = async (req) => {
+  const taskId = req.params?.taskId;
+  const task = await Task.findByIdAndDelete(taskId);
   return task;
 };
 
