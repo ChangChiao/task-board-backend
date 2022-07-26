@@ -1,5 +1,5 @@
 const { Task } = require("../models");
-const { findById } = require("../models/token.model");
+const ApiError = require('../utils/ApiError');
 const getTask = async (userBody) => {
   const { order, city, keyword } = userBody;
   const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
@@ -8,8 +8,10 @@ const getTask = async (userBody) => {
   return task;
 };
 
-const getTaskByUser = async (userBody) => {
-  const task = await Task.findById(userBody._id);
+const getUserTask = async (req) => {
+  const userId = req.params?.userId;
+  const status = req.body.status
+  const task = await Task.find({author: userId, status});
   return task;
 };
 
@@ -18,28 +20,31 @@ const createTask = async (userBody) => {
   return task;
 };
 const updateTask = async (userBody) => {
-  const task = await Task.findByIdAndUpdate(userBody._id, { userBody });
+  const taskId = req.params?.taskId;
+  const task = await Task.findByIdAndUpdate({ _id: taskId }, { userBody });
   return task;
 };
 
 const applyTask = async (req) => {
   const taskId = req.params?.taskId;
   const user = req.user._id;
-  const isExist = await Task.find(
-    { _id: taskId },
-    { applicant: { $elemMatch: { $eq: user } } }
-  );
-  if (isExist) {
-    await Task.findByIdAndUpdate(
-      { _id: taskId },
-      { $pull: { applicant: user } }
-    );
-  } else {
-    await Task.findByIdAndUpdate(
-      { _id: taskId },
-      { $push: { applicant: user } }
-    );
+  await Task.findByIdAndUpdate({ _id: taskId }, { $push: { applicant: user } });
+};
+
+const cancelApplyTask = async (req) => {
+  const taskId = req.params?.taskId;
+  const user = req.user._id;
+  await Task.findByIdAndUpdate({ _id: taskId }, { $pull: { applicant: user } });
+};
+
+const pickStaff = async (req) => {
+  const taskId = req.params?.taskId;
+  const staff = req.body.staff;
+  const task = await Task.findById(taskId)
+  if(task.status !== 0){
+    throw new ApiError(httpStatus.BAD_REQUEST, '該任務已結束');
   }
+  await Task.findByIdAndUpdate({ _id: taskId }, { staff, status: 1 });
 };
 
 const deleteTask = async (req) => {
@@ -50,9 +55,11 @@ const deleteTask = async (req) => {
 
 module.exports = {
   getTask,
-  getTaskByUser,
+  getUserTask,
   createTask,
   updateTask,
   deleteTask,
   applyTask,
+  cancelApplyTask,
+  pickStaff,
 };

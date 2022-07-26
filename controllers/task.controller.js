@@ -11,8 +11,8 @@ const getTask = catchAsync(async (req, res) => {
   });
 });
 
-const getTaskByUser = catchAsync(async (req, res) => {
-  const taskList = await taskService.getTaskByUser(req.body);
+const getUserTask = catchAsync(async (req, res) => {
+  const taskList = await taskService.getUserTask(req);
   res.status(httpStatus.OK).send({
     data: taskList,
     message: "成功",
@@ -39,6 +39,21 @@ const applyTask = catchAsync(async (req, res) => {
   });
 });
 
+const cancelApplyTask = catchAsync(async (req, res) => {
+  await taskService.cancelApplyTask(req);
+  res.status(httpStatus.OK).send({
+    message: "取消成功",
+    status: "success"
+  });
+});
+
+const pickStaff = catchAsync(async (req, res) => {
+  await taskService.pickStaff(req);
+  res.status(httpStatus.OK).send({
+    message: "選擇成功",
+    status: "success"
+  });
+});
 
 const updateTask = catchAsync(async (req, res) => {
   const task = await taskService.updateTask(req.body);
@@ -59,9 +74,11 @@ const deleteTask = catchAsync(async (req, res) => {
 
 module.exports = {
   getTask,
-  getTaskByUser,
+  getUserTask,
   createTask,
   updateTask,
   deleteTask,
   applyTask,
+  pickStaff,
+  cancelApplyTask
 };

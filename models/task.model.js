@@ -20,7 +20,7 @@ const taskSchema = new mongoose.Schema({
   },
   status:{
     type: Number,
-    enum: [0, 1, 2]
+    enum: [0, 1, 2] //0 進行中 1已結束 2已過期
   },
   cover:{
     type: String,
@@ -43,6 +43,10 @@ const taskSchema = new mongoose.Schema({
       },
       message: `已經超過三個人申請`
     },
+  },
+  staff:{
+    type: mongoose.Schema.ObjectId,
+    default: null
   }
 });
 

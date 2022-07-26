@@ -9,6 +9,12 @@ const addTask = {
   }),
 };
 
+const pickStaff = {
+  body: Joi.object().keys({
+    staff: Joi.string().required(),
+  }),
+}
 module.exports = {
-    addTask
+    addTask,
+    pickStaff
 };
