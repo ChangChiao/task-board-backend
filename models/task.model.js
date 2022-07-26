@@ -34,6 +34,16 @@ const taskSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  applicant:{
+    type: [mongoose.Schema.ObjectId],
+    default: [],
+    validate: {
+      validator: function(){
+        return !(this.applicant.length >= 3)
+      },
+      message: `已經超過三個人申請`
+    },
+  }
 });
 
 const Task = mongoose.model("Task", taskSchema);

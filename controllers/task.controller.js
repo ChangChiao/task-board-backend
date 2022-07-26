@@ -20,6 +20,7 @@ const getTaskByUser = catchAsync(async (req, res) => {
   });
 });
 
+
 const createTask = catchAsync(async (req, res) => {
   const task = await taskService.createTask(req.body);
   res.status(httpStatus.CREATED).send({
@@ -28,6 +29,16 @@ const createTask = catchAsync(async (req, res) => {
     status: "success"
   });
 });
+
+
+const applyTask = catchAsync(async (req, res) => {
+  await taskService.applyTask(req.params?.taskId);
+  res.status(httpStatus.OK).send({
+    message: "申請成功",
+    status: "success"
+  });
+});
+
 
 const updateTask = catchAsync(async (req, res) => {
   const task = await taskService.updateTask(req.body);
@@ -52,4 +63,5 @@ module.exports = {
   createTask,
   updateTask,
   deleteTask,
+  applyTask,
 };

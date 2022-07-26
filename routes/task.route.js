@@ -13,8 +13,9 @@ router
 
 router
   .route('/:taskId')
+  .post(auth(), taskController.applyTask)
+  .patch(auth(), taskController.updateTask)
   // .get(auth(), validate(taskValidation.getUser), taskController.getTaskByUser)
-  // .patch(auth(), validate(taskValidation.updateUser), taskController.updateTask)
   // .delete(auth(), validate(taskValidation.deleteUser), taskController.deleteTask);
 
 module.exports = router;
