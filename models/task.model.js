@@ -35,7 +35,10 @@ const taskSchema = new mongoose.Schema({
     default: Date.now,
   },
   applicant:{
-    type: [mongoose.Schema.ObjectId],
+    type: [{
+      type:mongoose.Schema.ObjectId,
+      ref:'User'
+    }],
     default: [],
     validate: {
       validator: function(){
@@ -49,6 +52,15 @@ const taskSchema = new mongoose.Schema({
     default: null
   }
 });
+
+taskSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'User',
+    select: '_id name avatar',
+  })
+  next()
+})
+
 
 const Task = mongoose.model("Task", taskSchema);
 module.exports = Task;

@@ -1,4 +1,4 @@
-const { Task } = require("../models");
+const { Task, User } = require("../models");
 const ApiError = require('../utils/ApiError');
 const getTask = async (userBody) => {
   const { order, city, keyword } = userBody;
@@ -11,14 +11,17 @@ const getTask = async (userBody) => {
 const getUserTask = async (req) => {
   const userId = req.params?.userId;
   const status = req.body.status
-  const task = await Task.find({author: userId, status});
+  const task = await User.find({author: userId, status});
   return task;
 };
 
 const createTask = async (userBody) => {
+  const user = req.user._id;
   const task = await Task.create(userBody);
+  await User.findByIdAndUpdate({ _id: user }, { $push: { createTaskList: task._id }})
   return task;
 };
+
 const updateTask = async (userBody) => {
   const taskId = req.params?.taskId;
   const task = await Task.findByIdAndUpdate({ _id: taskId }, { userBody });
@@ -28,12 +31,14 @@ const updateTask = async (userBody) => {
 const applyTask = async (req) => {
   const taskId = req.params?.taskId;
   const user = req.user._id;
+  await User.findByIdAndUpdate({ _id: user }, { $push: { applyTaskList: taskId }})
   await Task.findByIdAndUpdate({ _id: taskId }, { $push: { applicant: user } });
 };
 
 const cancelApplyTask = async (req) => {
   const taskId = req.params?.taskId;
   const user = req.user._id;
+  await User.findByIdAndUpdate({ _id: user }, { $pull: { applyTaskList: taskId }})
   await Task.findByIdAndUpdate({ _id: taskId }, { $pull: { applicant: user } });
 };
 
@@ -49,7 +54,9 @@ const pickStaff = async (req) => {
 
 const deleteTask = async (req) => {
   const taskId = req.params?.taskId;
+  const user = req.user._id;
   const task = await Task.findByIdAndDelete(taskId);
+  await User.findByIdAndUpdate({ _id: user }, { $pull: { createTaskList: taskId }})
   return task;
 };
 

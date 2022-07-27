@@ -84,6 +84,32 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
+    createTaskList:{
+      type: [{
+        type:mongoose.Schema.ObjectId,
+        ref:'Task'
+      }],
+      default: [],
+      validate: {
+        validator: function(){
+          return !(this.createTaskList.length >= 10)
+        },
+        message: `最多只能新增十則任務`
+      },
+    },
+    applyTaskList:{
+      type: [{
+        type:mongoose.Schema.ObjectId,
+        ref:'Task'
+      }],
+      default: [],
+      validate: {
+        validator: function(){
+          return !(this.applyTaskList.length >= 10)
+        },
+        message: `最多只能申請十則任務`
+      },
+    },
     createdAt: {
       type: Date,
       default: Date.now,
@@ -115,6 +141,15 @@ userSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   return bcrypt.compare(password, user.password);
 };
+
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'Task',
+    select: '_id status author title content pay cover',
+  })
+  next()
+})
+
 
 userSchema.pre("save", async function (next) {
   const user = this;

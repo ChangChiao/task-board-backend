@@ -22,7 +22,7 @@ const getUserTask = catchAsync(async (req, res) => {
 
 
 const createTask = catchAsync(async (req, res) => {
-  const task = await taskService.createTask(req.body);
+  const task = await taskService.createTask(req);
   res.status(httpStatus.CREATED).send({
     data: task,
     message: "新增成功",
