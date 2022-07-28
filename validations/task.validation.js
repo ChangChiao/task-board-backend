@@ -14,7 +14,14 @@ const pickStaff = {
     staff: Joi.string().required(),
   }),
 }
+
+const getUserTask = {
+  body: Joi.object().keys({
+    status: Joi.number(),
+  }),
+}
 module.exports = {
     addTask,
-    pickStaff
+    pickStaff,
+    getUserTask
 };
