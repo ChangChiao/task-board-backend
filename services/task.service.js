@@ -73,7 +73,7 @@ const deleteTask = async (req) => {
 };
 
 const getUserCreateTaskList = async (req) => {
-  const userId = req.params?.userId;
+  const userId = req.user._id;
   const task = await User.find({
     _id: userId,
   }).select("createTaskList");
@@ -81,7 +81,7 @@ const getUserCreateTaskList = async (req) => {
 };
 
 const getUserApplyTaskList = async (req) => {
-  const userId = req.params?.userId;
+  const userId = req.user._id;
   const task = await User.find({
     _id: userId,
   }).select("applyTaskList");

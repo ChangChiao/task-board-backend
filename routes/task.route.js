@@ -28,12 +28,12 @@ router
 
 
 router
-  .route('/:userId/createTaskList')
+  .route('/createTaskList')
   .get(auth(), taskController.getUserCreateTaskList)
 
 
   router
-  .route('/:userId/applyTaskList')
+  .route('/applyTaskList')
   .get(auth(), taskController.getUserApplyTaskList)
 
 module.exports = router;

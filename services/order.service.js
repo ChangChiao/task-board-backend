@@ -23,7 +23,7 @@ const createOrder = async (userBody) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
   userBody.MerchantOrderNo = timestamp;
   userBody.TimeStamp = timestamp;
-  userBody.user = "62b7076950b6177e6b2af1f8";
+  // userBody.user = "62b7076950b6177e6b2af1f8";
   console.log("userBody", userBody.user);
   const order = await Order.create(userBody);
   const encrypt = await encryptOrder(order);

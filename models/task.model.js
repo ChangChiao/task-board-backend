@@ -56,7 +56,7 @@ const taskSchema = new mongoose.Schema({
 taskSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'User',
-    select: '_id name avatar',
+    select: '_id name avatar isVip',
   })
   next()
 })
