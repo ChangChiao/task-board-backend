@@ -1,32 +1,34 @@
 const { Order } = require("../models");
 const crypto = require("crypto");
 const config = require("../config/config");
-
 const encryptOrder = async (orderObj) => {
-  const order = JSON.parse(JSON.stringify(orderObj));
-  order.MerchantID = config.newebpay.merchantID;
-  order.Version = config.newebpay.version;
-  order.Email = "joe.chang1014@gmail.com";
-  // const param = genDataChain(order);
-  const aesEncrypt = create_mpg_aes_encrypt(order);
+  orderObj.MerchantID = config.newebpay.merchantID;
+  orderObj.Version = config.newebpay.version;
+  // const param = genDataChain(orderObj);
+  const aesEncrypt = create_mpg_aes_encrypt(orderObj);
   console.log("aesEncrypt", aesEncrypt); //交易用
   const shaEncrypt = create_mpg_sha_encrypt(aesEncrypt);
   console.log("shaEncrypt", shaEncrypt); //驗證用
-  order.TradeInfo = aesEncrypt;
-  order.TradeSha = shaEncrypt;
-  console.log("%===%%", order);
-  return order;
+  orderObj.TradeInfo = aesEncrypt;
+  orderObj.TradeSha = shaEncrypt;
+  console.log("%===%%", orderObj);
+  return orderObj;
   //TODO email要動態
 };
 
-const createOrder = async (userBody) => {
+const createOrder = async (req) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
-  userBody.MerchantOrderNo = timestamp;
-  userBody.TimeStamp = timestamp;
+  const orderObj = {};
+  orderObj.MerchantOrderNo = timestamp;
+  orderObj.TimeStamp = timestamp;
+  orderObj.Email = req.user.email || "joe.chang1014@gmail.com";
+  orderObj.Amt = 199;
+  orderObj.ItemDesc = "vip一個月";
+  orderObj.user = req.user._id;
   // userBody.user = "62b7076950b6177e6b2af1f8";
-  console.log("userBody", userBody.user);
-  const order = await Order.create(userBody);
-  const encrypt = await encryptOrder(order);
+  await Order.create(orderObj);
+  console.log("orderObj----", orderObj);
+  const encrypt = await encryptOrder(orderObj);
   return encrypt;
 };
 

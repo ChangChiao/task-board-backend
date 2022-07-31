@@ -8,15 +8,11 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth(), validate(orderValidation.createOrder), orderController.createOrder)
-//   .post(auth(), validate(orderValidation.createOrder), orderController.createOrder)
+  .post(auth(), orderController.createOrder)
 
-//   router
-//   .route('/:orderId')
-//   .get(validate(orderValidation.getOrder), orderController.getOrder)
 
 router
 .route('/notify')
-.post(orderController.notifyOrder)
+.post(auth(), orderController.notifyOrder)
 
 module.exports = router;

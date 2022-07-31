@@ -9,7 +9,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(auth(), taskController.getTask)
+  .get(taskController.getTask)
   .post(auth(), checkFile, validate(taskValidation.addTask), taskController.createTask)
 
 router

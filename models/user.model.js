@@ -87,7 +87,7 @@ const userSchema = new mongoose.Schema(
     createTaskList:{
       type: [{
         type:mongoose.Schema.ObjectId,
-        ref:'tasks'
+        ref:'Task'
       }],
       default: [],
       validate: {
@@ -100,7 +100,7 @@ const userSchema = new mongoose.Schema(
     applyTaskList:{
       type: [{
         type:mongoose.Schema.ObjectId,
-        ref:'tasks'
+        ref:'Task'
       }],
       default: [],
       validate: {
@@ -144,7 +144,7 @@ userSchema.methods.isPasswordMatch = async function (password) {
 
 userSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'tasks',
+    path: 'createTaskList applyTaskList',
     select: '_id status author title content pay cover',
   })
   next()

@@ -49,13 +49,14 @@ const taskSchema = new mongoose.Schema({
   },
   staff:{
     type: mongoose.Schema.ObjectId,
+    ref:'User',
     default: null
   }
 });
 
 taskSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'User',
+    path: 'applicant staff',
     select: '_id name avatar isVip',
   })
   next()

@@ -3,7 +3,7 @@ const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 const { taskService } = require("../services");
 const getTask = catchAsync(async (req, res) => {
-  const taskList = await taskService.createTask(req.body);
+  const taskList = await taskService.getTask(req);
   res.status(httpStatus.OK).send({
     data: taskList,
     message: "成功",
