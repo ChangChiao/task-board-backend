@@ -2,9 +2,37 @@ const { Task, User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const getTask = async (userBody) => {
   const { order, city, keyword } = userBody;
-  const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
-    pay: order === "desc" ? -1 : 1,
-  });
+  // const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
+  //   pay: order === "desc" ? -1 : 1,
+  //   author: author.isVip
+  // });
+  const task = Task.aggregate([
+    {
+      $match: {
+        title: new RegExp(keyword, 'i'),
+        city: { $eq: city }
+      },
+    },
+    {
+      $lookup: {
+        from: "user",
+        localField: "author",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: $user,
+      },
+    },
+    {
+      $sort: {
+        "user.isVip": -1,
+        "pay": order === "desc" ? -1 : 1,
+      },
+    },
+  ]);
   return task;
 };
 
@@ -98,5 +126,5 @@ module.exports = {
   cancelApplyTask,
   pickStaff,
   getUserCreateTaskList,
-  getUserApplyTaskList
+  getUserApplyTaskList,
 };
