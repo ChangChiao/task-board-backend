@@ -2,18 +2,14 @@ const { Task, User } = require("../models");
 const config = require("../config/config");
 const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
-const getTask = async (req) => {
-  const { order, city, keyword } = req.query;
-  // const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
-  //   pay: order === "desc" ? -1 : 1,
-  // });
-  const task = Task.find()
+
 const getTask = async (userBody) => {
   const { order, city, keyword } = userBody;
   // const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
   //   pay: order === "desc" ? -1 : 1,
   //   author: author.isVip
   // });
+  // const task = Task.find()
   const task = Task.aggregate([
     {
       $match: {
