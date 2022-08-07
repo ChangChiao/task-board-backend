@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const validator = require('validator');
-const bcrypt = require('bcrypt');
-const { toJSON, paginate } = require('./plugins');
+const validator = require("validator");
+const bcrypt = require("bcrypt");
+const { toJSON, paginate } = require("./plugins");
 const { string } = require("joi");
 
 const userSchema = new mongoose.Schema(
@@ -37,8 +37,8 @@ const userSchema = new mongoose.Schema(
     },
     activeStatus: {
       type: String,
-      enum: ['none', 'normal', 'third', 'both'],
-      default: 'none',
+      enum: ["none", "normal", "third", "both"],
+      default: "none",
       select: false,
     },
     isEmailVerified: {
@@ -53,9 +53,9 @@ const userSchema = new mongoose.Schema(
       type: [mongoose.Schema.ObjectId],
       default: [],
     },
-    isVip:{
+    isVip: {
       type: Boolean,
-      default: false
+      default: false,
     },
     chatRecord: {
       type: [
@@ -80,36 +80,44 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
-    contact:{
+    contact: {
       type: String,
-      default: ""
+      default: "",
     },
-    createTaskList:{
-      type: [{
-        type:mongoose.Schema.ObjectId,
-        ref:'Task'
-      }],
+    // createTaskList: [{
+    //   type: mongoose.Schema.ObjectId,
+    //   ref: 'Task',
+    // }],
+    createTaskList: {
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: "Task",
+        },
+      ],
       default: [],
       validate: {
-        validator: function(){
-          return !(this.createTaskList.length >= 10)
+        validator: function () {
+          return !(this.createTaskList.length >= 10);
         },
-        message: `最多只能新增十則任務`
+        message: `最多只能新增十則任務`,
       },
     },
-    applyTaskList:{
-      type: [{
-        type:mongoose.Schema.ObjectId,
-        ref:'Task'
-      }],
-      default: [],
-      validate: {
-        validator: function(){
-          return !(this.applyTaskList.length >= 10)
-        },
-        message: `最多只能申請十則任務`
-      },
-    },
+    // applyTaskList: {
+    //   type: [
+    //     {
+    //       type: mongoose.Schema.ObjectId,
+    //       ref: "Task",
+    //     },
+    //   ],
+    //   default: [],
+    //   validate: {
+    //     validator: function () {
+    //       return !(this.applyTaskList.length >= 10);
+    //     },
+    //     message: `最多只能申請十則任務`,
+    //   },
+    // },
     createdAt: {
       type: Date,
       default: Date.now,
@@ -123,8 +131,6 @@ const userSchema = new mongoose.Schema(
 
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
-
-
 
 //TODO schema檢查
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
@@ -144,19 +150,17 @@ userSchema.methods.isPasswordMatch = async function (password) {
 
 userSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'createTaskList applyTaskList',
-    select: '_id status author title description reward cover',
-  })
-  next()
-})
-
+    path: "createTaskList",
+  });
+  next();
+});
 
 userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 12);
   }
-  if(!user.contact){
+  if (!user.contact) {
     user.contact = user.email;
   }
   next();

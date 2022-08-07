@@ -22,10 +22,7 @@ const getUserTask = catchAsync(async (req, res) => {
 
 
 const createTask = catchAsync(async (req, res) => {
-  console.log("req--", req);
-  console.log("req.body--", req.body);
-
-  const task = await taskService.createTask(req.body);
+  const task = await taskService.createTask(req);
   res.status(httpStatus.CREATED).send({
     data: task,
     message: "新增成功",
@@ -76,6 +73,7 @@ const deleteTask = catchAsync(async (req, res) => {
 });
 
 const getUserCreateTaskList = catchAsync((async (req, res) => {
+  console.log('87777777');
   const data = await taskService.getUserCreateTaskList(req);
   res.status(httpStatus.OK).send({
     data,

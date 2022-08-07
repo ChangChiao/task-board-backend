@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema({
   author: {
-    type: String,
-    trim: true,
+    type: mongoose.Schema.ObjectId,
     required: true,
   },
   description: {

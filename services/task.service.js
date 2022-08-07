@@ -48,7 +48,9 @@ const getUserTask = async (req) => {
   return task;
 };
 
-const createTask = async (userBody) => {
+const createTask = async (req) => {
+  const userBody = req.body
+  userBody.cover = req.file
   console.log("userBody===", userBody);
   const client = new ImgurClient({
     clientId: config.imgur.client_id,
@@ -65,7 +67,8 @@ const createTask = async (userBody) => {
   }else{
     throw new ApiError(httpStatus.SERVICE_UNAVAILABLE, "服務異常，請再試一次");
   }
-  const user = userBody.user._id;
+  const user = mongoose.Types.ObjectId(req.user._id);
+  userBody.author = user
   const task = await Task.create(userBody);
   await User.findByIdAndUpdate(
     { _id: user },
@@ -123,9 +126,10 @@ const deleteTask = async (req) => {
 
 const getUserCreateTaskList = async (req) => {
   const userId = req.user._id;
-  const task = await User.find({
-    _id: userId,
-  }).select("createTaskList");
+  console.log("userId", userId);
+  console.log('req', req);
+  const task = await User.findById(userId).select("createTaskList");
+  console.log('task', task);
   return task;
 };
 
