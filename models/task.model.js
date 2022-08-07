@@ -6,7 +6,7 @@ const taskSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
-  content: {
+  description: {
     type: String,
     required: true,
   },
@@ -14,9 +14,9 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  pay: {
+  reward: {
     type: Number,
-    default: 168,
+    required: true,
   },
   status:{
     type: Number,
@@ -26,11 +26,7 @@ const taskSchema = new mongoose.Schema({
     type: String,
     default: 'https://i.imgur.com/gA5JWK5.png',
   },
-  startTime: {
-    type: Date,
-    default: Date.now,
-  },
-  endTime: {
+  expire: {
     type: Date,
     default: Date.now,
   },

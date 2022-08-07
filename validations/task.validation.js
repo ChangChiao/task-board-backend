@@ -3,9 +3,10 @@ const Joi = require("joi");
 const addTask = {
   body: Joi.object().keys({
     title: Joi.string().required(),
-    content: Joi.string().required(),
-    pay: Joi.number().required(),
-    startTime: Joi.number().required(),
+    description: Joi.string().required(),
+    reward: Joi.string().required(),
+    expire: Joi.string().required(),
+    cover: Joi.any().required()
   }),
 };
 

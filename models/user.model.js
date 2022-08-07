@@ -145,7 +145,7 @@ userSchema.methods.isPasswordMatch = async function (password) {
 userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'createTaskList applyTaskList',
-    select: '_id status author title content pay cover',
+    select: '_id status author title description reward cover',
   })
   next()
 })

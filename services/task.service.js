@@ -6,7 +6,7 @@ const { ImgurClient } = require("imgur");
 const getTask = async (userBody) => {
   const { order, city, keyword } = userBody;
   // const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
-  //   pay: order === "desc" ? -1 : 1,
+  //   reward: order === "desc" ? -1 : 1,
   //   author: author.isVip
   // });
   // const task = Task.find()
@@ -19,7 +19,7 @@ const getTask = async (userBody) => {
     },
     {
       $lookup: {
-        from: "user",
+        from: "User",
         localField: "author",
         foreignField: "_id",
         as: "user",
@@ -27,16 +27,17 @@ const getTask = async (userBody) => {
     },
     {
       $unwind: {
-        path: $user,
+        path: "$user",
       },
     },
     {
       $sort: {
-        "user.isVip": -1,
-        "pay": order === "desc" ? -1 : 1,
+        "isVip": -1,
+        "reward": order === "desc" ? -1 : 1,
       },
     },
   ]);
+  console.log("task===", task)
   return task;
 };
 
@@ -47,15 +48,15 @@ const getUserTask = async (req) => {
   return task;
 };
 
-const createTask = async (req) => {
-  console.log("req===", req);
+const createTask = async (userBody) => {
+  console.log("userBody===", userBody);
   const client = new ImgurClient({
     clientId: config.imgur.client_id,
     clientSecret: config.imgur.client_secret,
     refreshToken: config.imgur.refresh_token,
   });
   const response = await client.upload({
-    image: req.files[0].buffer.toString("base64"),
+    image: userBody.cover.buffer.toString("base64"),
     type: "base64",
     album: config.imgur.album_id,
   });
@@ -64,7 +65,7 @@ const createTask = async (req) => {
   }else{
     throw new ApiError(httpStatus.SERVICE_UNAVAILABLE, "服務異常，請再試一次");
   }
-  const user = req.user._id;
+  const user = userBody.user._id;
   const task = await Task.create(userBody);
   await User.findByIdAndUpdate(
     { _id: user },
