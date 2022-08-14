@@ -84,10 +84,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    // createTaskList: [{
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: 'Task',
-    // }],
+    createTaskList: [{
+      type: mongoose.Schema.ObjectId,
+      ref: 'Task',
+    }],
     createTaskList: {
       type: [
         {
@@ -103,21 +103,21 @@ const userSchema = new mongoose.Schema(
         message: `最多只能新增十則任務`,
       },
     },
-    // applyTaskList: {
-    //   type: [
-    //     {
-    //       type: mongoose.Schema.ObjectId,
-    //       ref: "Task",
-    //     },
-    //   ],
-    //   default: [],
-    //   validate: {
-    //     validator: function () {
-    //       return !(this.applyTaskList.length >= 10);
-    //     },
-    //     message: `最多只能申請十則任務`,
-    //   },
-    // },
+    applyTaskList: {
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: "Task",
+        },
+      ],
+      default: [],
+      validate: {
+        validator: function () {
+          return !(this.applyTaskList.length >= 10);
+        },
+        message: `最多只能申請十則任務`,
+      },
+    },
     createdAt: {
       type: Date,
       default: Date.now,

@@ -6,7 +6,8 @@ const { generateToken } = require("./token.service");
 
 const thirdPartyRedirect = (user, res) => {
   const token = generateToken(user, res);
-  let path = `${config.frontEnd}?token=${token}&id=${user._id}&name=${user.name}&avatar=${user.avatar}`;
+  let path = `${config.frontEnd}?token=${token}`;
+  res.cookie("token", token);
   res.redirect(path);
 };
 
@@ -36,7 +37,7 @@ const thirdPartySignIn = async (thirdPartyName, data, res) => {
       userStatus.activeStatus =
         userStatus.activeStatus === "none" ? "third" : "both";
     }
-    userStatus[thirdPartyKey] = id
+    userStatus[thirdPartyKey] = id;
     await User.updateOne({ email }, userStatus);
   }
 
