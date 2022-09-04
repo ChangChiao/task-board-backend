@@ -30,6 +30,8 @@ const envVarsSchema = Joi.object()
     HASHIV: Joi.string().description("HASHIV for newebpay"),
     MERCHANTID: Joi.string().description("merchantID for newebpay"),
     VERSION: Joi.number().description("version for newebpay"),
+    LINE_PAY_CHANNELID: Joi.number().description("channelID for linePay"),
+    LINE_PAY_SECRET: Joi.string().description("secretKey for linePay"),
     CALLBACK_URL: Joi.string().description("callbackurl for oauth"),
     FRONTEND_URL: Joi.string().description("website url"),
   })
@@ -79,6 +81,10 @@ module.exports = {
     hashiv: envVars.HASHIV,
     merchantID: envVars.MERCHANTID,
     version: envVars.VERSION
+  },
+  linepay:{
+    channelID: envVars.LINE_PAY_CHANNELID,
+    secretKey: envVars.LINE_PAY_SECRET,
   },
   callback: envVars.CALLBACK_URL,
   frontEnd: envVars.FRONTEND_URL,
