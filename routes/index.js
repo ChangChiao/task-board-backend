@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const taskRoute = require('./task.route');
 const orderRoute = require('./order.route');
 const collectRoute = require('./collect.route');
+const linePayRoute = require('./linepay.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -26,6 +27,10 @@ const defaultRoutes = [
   {
     path: '/collect',
     route: collectRoute,
+  },
+  {
+    path: '/linepay',
+    route: linePayRoute,
   },
 ];
 
