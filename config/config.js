@@ -33,6 +33,7 @@ const envVarsSchema = Joi.object()
     LINE_PAY_CHANNELID: Joi.number().description("channelID for linePay"),
     LINE_PAY_SECRET: Joi.string().description("secretKey for linePay"),
     LINE_PAY_VERSION: Joi.string().description("version for linePay"),
+    LINE_PAY_SITE: Joi.string().description("api url for linePay"),
     CALLBACK_URL: Joi.string().description("callbackurl for oauth"),
     FRONTEND_URL: Joi.string().description("website url"),
   })
@@ -87,6 +88,7 @@ module.exports = {
     channelID: envVars.LINE_PAY_CHANNELID,
     secretKey: envVars.LINE_PAY_SECRET,
     version: envVars.LINE_PAY_VERSION,
+    url: envVars.LINE_PAY_SITE
   },
   callback: envVars.CALLBACK_URL,
   frontEnd: envVars.FRONTEND_URL,
