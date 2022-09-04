@@ -10,7 +10,7 @@ router
 
 
 router
-.route('/check/:id')
-.get(auth(), linepayController.checkOrder)
+.route('/confirm')
+.get(auth(), linepayController.confirmOrder)
 
 module.exports = router;
