@@ -2,12 +2,7 @@ const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
 const linePayService = require("../services/linepay.service");
 const createOrder = catchAsync(async (req, res) => {
-  const data = await linePayService.createOrder(req, res);
-  res.status(httpStatus.CREATED).send({
-    data,
-    message: "訂單建立成功",
-    status: "success"
-  });
+  await linePayService.createOrder(req, res);
 });
 
 
