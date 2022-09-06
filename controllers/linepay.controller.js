@@ -7,12 +7,7 @@ const createOrder = catchAsync(async (req, res) => {
 
 
 const confirmOrder = catchAsync(async (req, res) => {
-  const data = await linePayService.confirmOrder(req);
-  res.status(httpStatus.OK).send({
-    data,
-    message: "付款成功",
-    status: "success"
-  });
+ await linePayService.confirmOrder(req, res);
 });
 
 module.exports = {
