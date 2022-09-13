@@ -62,8 +62,10 @@ const createOrder = async (req, res) => {
   const linePayRes = await axios.post(url, reqBody, { headers });
   console.log("linePayRes", linePayRes.data);
   if (linePayRes?.data?.returnCode === "0000") {
-    res.redirect(linePayRes?.data?.info?.paymentUrl.web);
+    return linePayRes?.data?.info?.paymentUrl.web
+    // res.redirect(linePayRes?.data?.info?.paymentUrl.web);
   }
+  return null
 };
 
 const confirmOrder = async (req) => {
