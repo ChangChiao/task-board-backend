@@ -22,6 +22,23 @@ const orders = {
   ],
 };
 
+const createSignature = (uri, linePayBody) => {
+  const nonce = timeStamp;
+  const encrypt  = `${config.linepay.secretKey}/${
+    config.linepay.version
+  }${uri}${JSON.stringify(linePayBody)}${nonce}`;
+  const signature = Base64.stringify(
+    hmacSHA256(encrypt , config.linepay.secretKey)
+  );
+  const headers = {
+    "Content-Type": "application/json",
+    "X-LINE-ChannelId": config.linepay.channelID,
+    "X-LINE-Authorization-Nonce": nonce,
+    "X-LINE-Authorization": signature,
+  };
+  return headers;
+}
+
 const createOrder = async (req, res) => {
   const orderObj = { ...orders, currency: "TWD" };
   const timeStamp = Date.now();
@@ -41,23 +58,22 @@ const createOrder = async (req, res) => {
     },
   };
   const uri = "/payments/request";
-  const nonce = timeStamp;
-  const queryString = `${config.linepay.secretKey}/${
-    config.linepay.version
-  }${uri}${JSON.stringify(reqBody)}${nonce}`;
-  console.log("queryString", queryString);
-  const signature = Base64.stringify(
-    hmacSHA256(queryString, config.linepay.secretKey)
-  );
+  // const nonce = timeStamp;
+  // const queryString = `${config.linepay.secretKey}/${
+  //   config.linepay.version
+  // }${uri}${JSON.stringify(reqBody)}${nonce}`;
+  // console.log("queryString", queryString);
+  // const signature = createSignature
 
-  const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
-  console.log("url", url);
-  const headers = {
-    "Content-Type": "application/json",
-    "X-LINE-ChannelId": config.linepay.channelID,
-    "X-LINE-Authorization-Nonce": nonce,
-    "X-LINE-Authorization": signature,
-  };
+  // const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
+  // console.log("url", url);
+  // const headers = {
+  //   "Content-Type": "application/json",
+  //   "X-LINE-ChannelId": config.linepay.channelID,
+  //   "X-LINE-Authorization-Nonce": nonce,
+  //   "X-LINE-Authorization": signature,
+  // };
+  const headers = createSignature(uri, reqBody)
   console.log("reqBody", reqBody);
   const linePayRes = await axios.post(url, reqBody, { headers });
   console.log("linePayRes", linePayRes.data);
@@ -68,11 +84,28 @@ const createOrder = async (req, res) => {
   return null
 };
 
-const confirmOrder = async (req) => {
-  const taskId = req.params?.id;
-  const user = req.user._id;
-  const order = order;
-  order.orderId = parseInt(Date.now() / 1000);
+const confirmOrder = async (req, res) => {
+  const { transactionId, orderId } = req.query;
+  const uri = `/payments/${transactionId}/confirm`;
+  const order = await Order.findById(orderId);
+  const linePayBody = {
+    amount: order.amount,
+    currency: 'TWD',
+  }
+
+  const headers = createSignature(uri, linePayBody);
+
+  const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
+  const linePayRes = await axios.post(url, linePayBody, { headers });
+  console.log(linePayRes);
+  
+  if (linePayRes?.data?.returnCode === '0000') {
+    res.redirect(`/checkOrder?id=${orderId}`)
+  } else {
+    res.status(httpStatus.BAD_REQUEST).send({
+      message: linePayRes,
+    });
+  }
 };
 
 module.exports = {

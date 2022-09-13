@@ -18,7 +18,7 @@ const confirmOrder = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({
     data,
     message: "付款成功",
-    status: "success",
+    status: "success"
   });
 });
 
