@@ -12,8 +12,6 @@ const ApiError = require("./utils/ApiError");
 const { errorConverter, errorHandler } = require("./middlewares/error");
 const routes = require('./routes');
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/user.route");
 
 require("./services/scheduling");
 
