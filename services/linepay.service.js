@@ -3,7 +3,6 @@ const hmacSHA256 = require("crypto-js/hmac-sha256");
 const Base64 = require("crypto-js/enc-base64");
 const { Order } = require("../models");
 const { default: axios } = require("axios");
-const { log } = require("../config/logger");
 const orders = {
   amount: 299,
   currency: "TWD",
@@ -58,21 +57,6 @@ const createOrder = async (req, res) => {
     },
   };
   const uri = "/payments/request";
-  // const nonce = timeStamp;
-  // const queryString = `${config.linepay.secretKey}/${
-  //   config.linepay.version
-  // }${uri}${JSON.stringify(reqBody)}${nonce}`;
-  // console.log("queryString", queryString);
-  // const signature = createSignature
-
-  // const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
-  // console.log("url", url);
-  // const headers = {
-  //   "Content-Type": "application/json",
-  //   "X-LINE-ChannelId": config.linepay.channelID,
-  //   "X-LINE-Authorization-Nonce": nonce,
-  //   "X-LINE-Authorization": signature,
-  // };
   const headers = createSignature(uri, reqBody)
   console.log("reqBody", reqBody);
   const linePayRes = await axios.post(url, reqBody, { headers });
