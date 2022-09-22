@@ -66,7 +66,7 @@ const createOrder = async (req, res) => {
   const headers = createSignature(uri, reqBody)
   // console.log("reqBody", reqBody);
   const linePayRes = await axios.post(url, reqBody, { headers });
-  // console.log("linePayRes", linePayRes.data);
+  console.log("linePayRes---", linePayRes.data);
   if (linePayRes?.data?.returnCode === "0000") {
     return linePayRes?.data?.info?.paymentUrl.web
     // res.redirect(linePayRes?.data?.info?.paymentUrl.web);
