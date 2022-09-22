@@ -23,7 +23,7 @@ const orders = {
 };
 
 const createSignature = (uri, linePayBody) => {
-  const nonce = timeStamp;
+  const nonce = Date.now();
   const encrypt  = `${config.linepay.secretKey}/${
     config.linepay.version
   }${uri}${JSON.stringify(linePayBody)}${nonce}`;
@@ -44,10 +44,12 @@ const createOrder = async (req, res) => {
   const timeStamp = Date.now();
   orderObj.user = req.user._id;
   orderObj.TimeStamp = timeStamp;
-  orderObj.orderId = timeStamp.toString();
   orderObj.MerchantOrderNo = timeStamp;
-  await Order.create(orderObj);
+  orderObj.Amt = orderObj.amount
+  const newOrder = await Order.create(orderObj);
+  orderObj.orderId = newOrder._id;
   delete orderObj.user;
+  delete orderObj.Amt;
   delete orderObj.MerchantOrderNo;
   delete orderObj.TimeStamp;
   const reqBody = {
@@ -58,25 +60,13 @@ const createOrder = async (req, res) => {
     },
   };
   const uri = "/payments/request";
-  // const nonce = timeStamp;
-  // const queryString = `${config.linepay.secretKey}/${
-  //   config.linepay.version
-  // }${uri}${JSON.stringify(reqBody)}${nonce}`;
-  // console.log("queryString", queryString);
-  // const signature = createSignature
 
-  // const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
-  // console.log("url", url);
-  // const headers = {
-  //   "Content-Type": "application/json",
-  //   "X-LINE-ChannelId": config.linepay.channelID,
-  //   "X-LINE-Authorization-Nonce": nonce,
-  //   "X-LINE-Authorization": signature,
-  // };
+  const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
+
   const headers = createSignature(uri, reqBody)
-  console.log("reqBody", reqBody);
+  // console.log("reqBody", reqBody);
   const linePayRes = await axios.post(url, reqBody, { headers });
-  console.log("linePayRes", linePayRes.data);
+  // console.log("linePayRes", linePayRes.data);
   if (linePayRes?.data?.returnCode === "0000") {
     return linePayRes?.data?.info?.paymentUrl.web
     // res.redirect(linePayRes?.data?.info?.paymentUrl.web);
@@ -84,28 +74,21 @@ const createOrder = async (req, res) => {
   return null
 };
 
-const confirmOrder = async (req, res) => {
+const confirmOrder = async (req) => {
   const { transactionId, orderId } = req.query;
   const uri = `/payments/${transactionId}/confirm`;
   const order = await Order.findById(orderId);
   const linePayBody = {
-    amount: order.amount,
+    amount: order.Amt,
     currency: 'TWD',
   }
 
   const headers = createSignature(uri, linePayBody);
-
+  console.log('amount', order);
   const url = `${config.linepay.url}/${config.linepay.version}${uri}`;
   const linePayRes = await axios.post(url, linePayBody, { headers });
-  console.log(linePayRes);
-  
-  if (linePayRes?.data?.returnCode === '0000') {
-    res.redirect(`/checkOrder?id=${orderId}`)
-  } else {
-    res.status(httpStatus.BAD_REQUEST).send({
-      message: linePayRes,
-    });
-  }
+  console.log(linePayRes.data);
+  return  linePayRes.data
 };
 
 module.exports = {
