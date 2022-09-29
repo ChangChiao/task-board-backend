@@ -1,4 +1,5 @@
 const { Task, User } = require("../models");
+const mongoose = require('mongoose');
 const config = require("../config/config");
 const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
