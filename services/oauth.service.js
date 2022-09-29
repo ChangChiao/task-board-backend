@@ -7,7 +7,7 @@ const { generateToken } = require("./token.service");
 const thirdPartyRedirect = (user, res) => {
   const token = generateToken(user, res);
   let path = `${config.frontEnd}?token=${token}`;
-  res.cookie("token", token);
+  res.cookie("token", token , {httpOnly: false, secure: false});
   res.redirect(path);
 };
 

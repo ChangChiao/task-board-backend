@@ -18,7 +18,7 @@ const getUser = catchAsync(async (req, res) => {
   // const options = pick(req.query, ["sortBy", "limit", "page"]);
   // const result = await userService.queryUsers(filter, options);
   // res.send(result);
-  console.log('97777', req.user)
+  console.log('user', req.user)
   const userId = req.user?._id;
   const user = await userService.getUserById(userId);
   if (!user) {

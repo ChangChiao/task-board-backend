@@ -73,7 +73,6 @@ const deleteTask = catchAsync(async (req, res) => {
 });
 
 const getUserCreateTaskList = catchAsync((async (req, res) => {
-  console.log('87777777');
   const data = await taskService.getUserCreateTaskList(req);
   res.status(httpStatus.OK).send({
     data,

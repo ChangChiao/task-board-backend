@@ -28,8 +28,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(compression());
 
 // enable cors
-app.use(cors());
-app.options("*", cors());
+const corsOptions = {
+  origin: (origin, callback) => {
+    callback(null, true);
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  allowedHeaders: ["Access-Control-Allow-Origin", "Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  credentials: true
+};
+app.use(cors(corsOptions));
+app.options(config.frontEnd, cors());
 
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
