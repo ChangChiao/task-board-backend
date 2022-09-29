@@ -11,6 +11,6 @@ router
 
 router
 .route('/confirm')
-.get(auth(), linepayController.confirmOrder)
+.get(linepayController.confirmOrder)
 
 module.exports = router;
