@@ -4,40 +4,56 @@ const config = require("../config/config");
 const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
 
-const getTask = async (userBody) => {
-  const { order, city, keyword } = userBody;
-  // const task = await Task.find({ city }, { $text: { $search: keyword } }).sort({
-  //   reward: order === "desc" ? -1 : 1,
-  //   author: author.isVip
-  // });
+const getTask = async (req) => {
+  const { order, city, keyword } = req.query;
+  console.log("keyword", city, keyword)
   // const task = Task.find()
-  const task = Task.aggregate([
-    {
-      $match: {
-        title: new RegExp(keyword, 'i'),
-        city: { $eq: city }
-      },
-    },
-    {
-      $lookup: {
-        from: "User",
-        localField: "author",
-        foreignField: "_id",
-        as: "user",
-      },
-    },
-    {
-      $unwind: {
-        path: "$user",
-      },
-    },
+  const pipeline = [
     {
       $sort: {
         "isVip": -1,
         "reward": order === "desc" ? -1 : 1,
       },
     },
-  ]);
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "author",
+      },
+    },
+    {
+      $unwind: {
+        path: "$author",
+      },
+    },
+    {
+      $project: {
+        "author.contact": 0,
+        "author.email":0,
+        "author.password": 0,
+        "author.activeStatus": 0,
+        "author.googleId": 0,
+        "author.createTaskList":0
+      },
+    },
+  ];
+  if(city!==undefined){
+    pipeline.unshift({
+      $match: {
+        city: { $eq: city }
+      }
+    })
+  }
+  if(keyword!==undefined){
+    pipeline.unshift({
+      $match: {
+        title: new RegExp(keyword, 'i')
+      }
+    })
+  }
+  const task = Task.aggregate(pipeline);
   console.log("task===", task)
   return task;
 };
@@ -131,7 +147,7 @@ const getUserCreateTaskList = async (req) => {
   console.log('req', req);
   const task = await User.findById(userId).select("createTaskList");
   console.log('task', task);
-  return task;
+  return task.createTaskList ?? [];
 };
 
 const getUserApplyTaskList = async (req) => {

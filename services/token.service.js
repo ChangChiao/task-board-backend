@@ -14,7 +14,7 @@ const { tokenTypes } = require("../config/tokens");
  */
 const generateToken = (user, res) => {
   const token = jwt.sign({ id: user._id }, config.jwt.secret, {
-    expiresIn: config.jwt.expires,
+    expiresIn: "1d",
   });
   return token;
 };

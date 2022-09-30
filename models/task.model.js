@@ -19,7 +19,12 @@ const taskSchema = new mongoose.Schema({
   },
   status:{
     type: Number,
+    default: 0,
     enum: [0, 1, 2] //0 進行中 1已結束 2已過期
+  },
+  city:{
+    type: String,
+    default: 'Taipei',
   },
   cover:{
     type: String,
