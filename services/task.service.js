@@ -108,7 +108,7 @@ const applyTask = async (req) => {
   if(taskAuthor.author.toString() === user.toString()){
     throw new ApiError(httpStatus.BAD_REQUEST, "不能申請自己的任務");
   }
-  const target = await User.find({_id: user}, {applyTaskList: {$elemMatch: { $eq: taskId}}})
+  const target = await User.findOne({"$and": [{_id: user}, {applyTaskList: { $in: [ taskId ] }}]})
   if(target){
     throw new ApiError(httpStatus.BAD_REQUEST, "不能重複申請任務");
   }
