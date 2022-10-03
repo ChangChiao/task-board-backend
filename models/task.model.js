@@ -54,13 +54,13 @@ const taskSchema = new mongoose.Schema({
   }
 });
 
-taskSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'applicant staff',
-    select: '_id name avatar isVip',
-  })
-  next()
-})
+// taskSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'applicant staff',
+//     select: '_id name avatar isVip',
+//   })
+//   next()
+// })
 
 
 const Task = mongoose.model("Task", taskSchema);

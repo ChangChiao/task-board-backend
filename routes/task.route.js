@@ -10,11 +10,11 @@ const router = express.Router();
 router
   .route('/')
   .get(taskController.getTask)
-  .post(upload.single("cover"), taskController.createTask)
+  .post(auth(),upload.single("cover"), taskController.createTask)
+
 
 router
   .route('/:taskId')
-  .post(auth(), taskController.applyTask)
   .patch(auth(), taskController.updateTask)
   .delete(auth(), taskController.deleteTask);
   // .get(auth(), validate(taskValidation.getUser), taskController.getTaskByUser)

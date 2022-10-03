@@ -6,7 +6,8 @@ const addTask = {
     description: Joi.string().required(),
     reward: Joi.string().required(),
     expire: Joi.string().required(),
-    cover: Joi.any().required()
+    cover: Joi.any().required(),
+    city: Joi.string().required(),
   }),
 };
 

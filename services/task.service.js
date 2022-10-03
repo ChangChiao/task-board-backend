@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require("../config/config");
 const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
+const httpStatus = require("http-status");
 
 const getTask = async (req) => {
   const { order, city, keyword } = req.query;
@@ -103,6 +104,14 @@ const updateTask = async (userBody) => {
 const applyTask = async (req) => {
   const taskId = req.params?.taskId;
   const user = req.user._id;
+  const taskAuthor = await Task.findById(taskId).select('author');
+  if(taskAuthor.author.toString() === user.toString()){
+    throw new ApiError(httpStatus.BAD_REQUEST, "不能申請自己的任務");
+  }
+  const target = await User.find({_id: user}, {applyTaskList: {$elemMatch: { $eq: taskId}}})
+  if(target){
+    throw new ApiError(httpStatus.BAD_REQUEST, "不能重複申請任務");
+  }
   await User.findByIdAndUpdate(
     { _id: user },
     { $push: { applyTaskList: taskId } }

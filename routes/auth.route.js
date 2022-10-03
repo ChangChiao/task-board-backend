@@ -15,6 +15,7 @@ router.get(
   })
 );
 
+//使用者授權成功後給google通知後端用的api
 router.get(
   "/google/callback",
   passport.authenticate("google", {

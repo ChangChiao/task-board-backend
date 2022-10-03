@@ -84,10 +84,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    createTaskList: [{
-      type: mongoose.Schema.ObjectId,
-      ref: 'Task',
-    }],
     createTaskList: {
       type: [
         {
