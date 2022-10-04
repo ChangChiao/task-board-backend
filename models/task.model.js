@@ -50,17 +50,20 @@ const taskSchema = new mongoose.Schema({
   staff:{
     type: mongoose.Schema.ObjectId,
     ref:'User',
-    default: null
   }
+}, {
+  versionKey: false,
 });
 
-// taskSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'applicant staff',
-//     select: '_id name avatar isVip',
-//   })
-//   next()
-// })
+taskSchema.pre(/^find/, function (next) {
+  // this.populate({
+  //   path: 'applicant staff',
+  //   select: '_id name avatar isVip',
+  // })
+  // this.populate('applicant');
+  // this.populate('staff','_id name avatar isVip');
+  next()
+})
 
 
 const Task = mongoose.model("Task", taskSchema);

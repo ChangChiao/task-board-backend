@@ -1,5 +1,5 @@
 const { Task, User } = require("../models");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const config = require("../config/config");
 const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
@@ -7,13 +7,13 @@ const httpStatus = require("http-status");
 
 const getTask = async (req) => {
   const { order, city, keyword } = req.query;
-  console.log("keyword", city, keyword)
+  console.log("keyword", city, keyword);
   // const task = Task.find()
   const pipeline = [
     {
       $sort: {
-        "isVip": -1,
-        "reward": order === "desc" ? -1 : 1,
+        isVip: -1,
+        reward: order === "desc" ? -1 : 1,
       },
     },
     {
@@ -32,43 +32,51 @@ const getTask = async (req) => {
     {
       $project: {
         "author.contact": 0,
-        "author.email":0,
+        "author.email": 0,
         "author.password": 0,
         "author.activeStatus": 0,
         "author.googleId": 0,
-        "author.createTaskList":0
+        "author.createTaskList": 0,
       },
     },
   ];
-  if(city!==undefined){
+  if (city !== undefined) {
     pipeline.unshift({
       $match: {
-        city: { $eq: city }
-      }
-    })
+        city: { $eq: city },
+      },
+    });
   }
-  if(keyword!==undefined){
+  if (keyword !== undefined) {
     pipeline.unshift({
       $match: {
-        title: new RegExp(keyword, 'i')
-      }
-    })
+        title: new RegExp(keyword, "i"),
+      },
+    });
   }
   const task = Task.aggregate(pipeline);
-  console.log("task===", task)
+  console.log("task===", task);
   return task;
 };
 
 const getUserTask = async (req) => {
   const userId = req.params?.userId;
   const status = req.body.status;
-  const task = await User.find({ author: userId, status });
+  const task = await User.find({ author: userId, status }).populate({
+    path: "applicant",
+    populate: { path: "applicant", select: "name avatar" },
+  });
+
+  // const task = await User.find({ author: userId, status }).populate({
+  //   path: "createTaskList.applicant",
+  //   select: "name avatar"
+  // });
   return task;
 };
 
 const createTask = async (req) => {
-  const userBody = req.body
-  userBody.cover = req.file
+  const userBody = req.body;
+  userBody.cover = req.file;
   console.log("userBody===", userBody);
   const client = new ImgurClient({
     clientId: config.imgur.client_id,
@@ -82,11 +90,12 @@ const createTask = async (req) => {
   });
   if (response.status === 200) {
     userBody.cover = response.data.link;
-  }else{
+  } else {
     throw new ApiError(httpStatus.SERVICE_UNAVAILABLE, "服務異常，請再試一次");
   }
-  const user = mongoose.Types.ObjectId(req.user._id);
-  userBody.author = user
+
+  const user = req.user._id;
+  userBody.author = user;
   const task = await Task.create(userBody);
   await User.findByIdAndUpdate(
     { _id: user },
@@ -104,12 +113,14 @@ const updateTask = async (userBody) => {
 const applyTask = async (req) => {
   const taskId = req.params?.taskId;
   const user = req.user._id;
-  const taskAuthor = await Task.findById(taskId).select('author');
-  if(taskAuthor.author.toString() === user.toString()){
+  const taskAuthor = await Task.findById(taskId).select("author");
+  if (taskAuthor.author.toString() === user.toString()) {
     throw new ApiError(httpStatus.BAD_REQUEST, "不能申請自己的任務");
   }
-  const target = await User.findOne({"$and": [{_id: user}, {applyTaskList: { $in: [ taskId ] }}]})
-  if(target){
+  const target = await User.findOne({
+    $and: [{ _id: user }, { applyTaskList: { $in: [taskId] } }],
+  });
+  if (target) {
     throw new ApiError(httpStatus.BAD_REQUEST, "不能重複申請任務");
   }
   await User.findByIdAndUpdate(
@@ -152,11 +163,61 @@ const deleteTask = async (req) => {
 
 const getUserCreateTaskList = async (req) => {
   const userId = req.user._id;
+  // const status = req.body.status;
   console.log("userId", userId);
-  console.log('req', req);
-  const task = await User.findById(userId).select("createTaskList");
-  console.log('task', task);
-  return task.createTaskList ?? [];
+  console.log("req", req);
+  // const task = await User.find({ _id: userId}).populate({
+  //   path: "createTaskList.applicant", select: "name avatar"
+  // });
+
+  // const task = await User.find({_id: userId}).populate({
+  //   path: "createTaskList",
+  //   populate:{
+  //     path: "applicant", select: "name avatar",
+  //   }
+  // });
+  const task = await User.aggregate([
+    {
+      $match: {
+        _id: { $eq: userId },
+      },
+    },
+    {
+      $lookup: {
+        from: "tasks",
+        localField: "createTaskList",
+        foreignField: "_id",
+        as: "taskList",
+      },
+    },
+    {
+      $unwind: "$taskList",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "taskList.applicant",
+        foreignField: "_id",
+        as: "taskList.applicant",
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        taskList: { $push: "$taskList" },
+      },
+    },
+    // {
+    //   $group: {
+    //     _id: "$_id",
+    //     "taskList.applicant": { $push: "$taskList.applicant" },
+    //   },
+    // },
+  ]);
+
+  // const task = await User.findById(userId).select("createTaskList");
+  console.log("task", task);
+  return task?.[0]?.taskList ?? [];
 };
 
 const getUserApplyTaskList = async (req) => {

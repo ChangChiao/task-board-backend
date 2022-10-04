@@ -148,9 +148,11 @@ userSchema.pre(/^find/, function (next) {
   this.populate({
     path: "createTaskList",
   });
+  this.populate({
+    path: "applyTaskList",
+  });
   next();
 });
-
 userSchema.pre("save", async function (next) {
   const user = this;
   if (user.isModified("password")) {
