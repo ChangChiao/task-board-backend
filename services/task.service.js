@@ -202,17 +202,39 @@ const getUserCreateTaskList = async (req) => {
       },
     },
     {
+      $project: {
+        "taskList.applicant.contact": 0,
+        "taskList.applicant.email": 0,
+        "taskList.applicant.password": 0,
+        "taskList.applicant.activeStatus": 0,
+        "taskList.applicant.googleId": 0,
+        "taskList.applicant.createTaskList": 0,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "taskList.staff",
+        foreignField: "_id",
+        as: "taskList.staff",
+      },
+    },
+    {
+      $project: {
+        "taskList.staff.contact": 0,
+        "taskList.staff.email": 0,
+        "taskList.staff.password": 0,
+        "taskList.staff.activeStatus": 0,
+        "taskList.staff.googleId": 0,
+        "taskList.staff.createTaskList": 0,
+      },
+    },
+    {
       $group: {
         _id: "$_id",
         taskList: { $push: "$taskList" },
       },
     },
-    // {
-    //   $group: {
-    //     _id: "$_id",
-    //     "taskList.applicant": { $push: "$taskList.applicant" },
-    //   },
-    // },
   ]);
 
   // const task = await User.findById(userId).select("createTaskList");
