@@ -13,8 +13,6 @@ const { errorConverter, errorHandler } = require("./middlewares/error");
 const routes = require('./routes');
 
 
-require("./services/scheduling");
-
 var app = express();
 app.use(logger("dev"));
 

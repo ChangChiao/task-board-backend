@@ -13,6 +13,7 @@ mongoose.connect(config.mongoose.url).then(() => {
 });
 
 require('./config/passport')
+require("./services/scheduling");
 
 const exitHandler = () => {
   if (server) {
