@@ -12,8 +12,10 @@ const getTask = async (req) => {
   const pipeline = [
     {
       $sort: {
-        isVip: -1,
+        status: 1,
         reward: order === "desc" ? -1 : 1,
+        isVip: -1,
+        expire: -1,
       },
     },
     {
