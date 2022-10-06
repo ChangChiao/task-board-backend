@@ -50,8 +50,19 @@ const userSchema = new mongoose.Schema(
       default: "https://i.imgur.com/gA5JWK5.png",
     },
     collect: {
-      type: [mongoose.Schema.ObjectId],
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: "Task",
+        },
+      ],
       default: [],
+      validate: {
+        validator: function () {
+          return !(this.collect.length >= 10);
+        },
+        message: `最多只能收藏十則任務`,
+      },
     },
     isVip: {
       type: Boolean,
@@ -66,7 +77,7 @@ const userSchema = new mongoose.Schema(
           },
           receiver: {
             type: mongoose.Schema.ObjectId,
-            ref: "user",
+            ref: "User",
           },
         },
       ],

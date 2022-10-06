@@ -11,9 +11,9 @@ router
   .get(auth(), collectController.getCollect)
   
   router
-  .route('/:cardId')
-  .post(auth(), validate(collectValidation.addCollect), collectController.addCollect)
-  .delete(auth(), validate(collectValidation.removeCollect), collectController.removeCollect);
+  .route('/:taskId')
+  .post(auth(), collectController.addCollect)
+  .delete(auth(), collectController.removeCollect);
 
 
   module.exports = router;

@@ -1,26 +1,26 @@
 const { User } = require("../models");
-const getCollect = async (userBody) => {
+const getCollect = async (req) => {
   const user = userBody._id;
   const collect = await User.findById(user).select("collect");
   return collect;
 };
 
-const addCollect = async (userBody) => {
-  const cardId = userBody.query.cardId;
-  const user = userBody._id;
+const addCollect = async (req) => {
+  const taskId = req.params?.taskId;
+  const userId = req.user._id;
   const collect = await User.findByIdAndUpdate(
-    { _id: user },
-    { $push: { collect: cardId } }
+    { _id: userId },
+    { $push: { collect: taskId } }
   );
   return collect;
 };
 
-const removeCollect = async (userBody) => {
-  const cardId = userBody.query.cardId;
-  const user = userBody._id;
+const removeCollect = async (req) => {
+  const taskId = req.params?.taskId;
+  const userId = req.user._id;
   const collect = await User.findByIdAndUpdate(
-    { _id: user },
-    { $pull: { collect: cardId } }
+    { _id: userId },
+    { $pull: { collect: taskId } }
   );
   return collect;
 };

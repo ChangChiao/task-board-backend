@@ -4,7 +4,7 @@ const collectService = require("../services/collect.service");
 const config = require("../config/config");
 
 const getCollect = catchAsync(async (req, res) => {
-  const data = await collectService.getCollect(req.body);
+  const data = await collectService.getCollect(req);
   res.status(httpStatus.CREATED).send({
     data,
     message: "成功",
@@ -14,7 +14,7 @@ const getCollect = catchAsync(async (req, res) => {
 
 
 const addCollect = catchAsync(async (req, res) => {
-  const data = await collectService.addCollect(req.body);
+  const data = await collectService.addCollect(req);
   res.status(httpStatus.CREATED).send({
     data,
     message: "新增成功",
