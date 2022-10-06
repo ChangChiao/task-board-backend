@@ -165,19 +165,6 @@ const deleteTask = async (req) => {
 
 const getUserCreateTaskList = async (req) => {
   const userId = req.user._id;
-  // const status = req.body.status;
-  console.log("userId", userId);
-  console.log("req", req);
-  // const task = await User.find({ _id: userId}).populate({
-  //   path: "createTaskList.applicant", select: "name avatar"
-  // });
-
-  // const task = await User.find({_id: userId}).populate({
-  //   path: "createTaskList",
-  //   populate:{
-  //     path: "applicant", select: "name avatar",
-  //   }
-  // });
   const task = await User.aggregate([
     {
       $match: {
@@ -238,18 +225,72 @@ const getUserCreateTaskList = async (req) => {
       },
     },
   ]);
-
-  // const task = await User.findById(userId).select("createTaskList");
-  console.log("task", task);
   return task?.[0]?.taskList ?? [];
 };
 
 const getUserApplyTaskList = async (req) => {
   const userId = req.user._id;
-  const task = await User.find({
-    _id: userId,
-  }).select("applyTaskList");
-  return task;
+  const task = await User.aggregate([
+    {
+      $match: {
+        _id: { $eq: userId },
+      },
+    },
+    {
+      $lookup: {
+        from: "tasks",
+        localField: "applyTaskList",
+        foreignField: "_id",
+        as: "taskList",
+      },
+    },
+    {
+      $unwind: "$taskList",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "taskList.staff",
+        foreignField: "_id",
+        as: "taskList.staff",
+      },
+    },
+    {
+      $project: {
+        "taskList.staff.contact": 0,
+        "taskList.staff.email": 0,
+        "taskList.staff.password": 0,
+        "taskList.staff.activeStatus": 0,
+        "taskList.staff.googleId": 0,
+        "taskList.staff.createTaskList": 0,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "taskList.author",
+        foreignField: "_id",
+        as: "taskList.author",
+      },
+    },
+    {
+      $project: {
+        "taskList.author.email": 0,
+        "taskList.author.password": 0,
+        "taskList.author.activeStatus": 0,
+        "taskList.author.googleId": 0,
+        "taskList.author.createTaskList": 0,
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        taskList: { $push: "$taskList" },
+      },
+    },
+  ]);
+
+  return task?.[0]?.taskList ?? [];
 };
 
 module.exports = {
