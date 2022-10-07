@@ -1,4 +1,7 @@
-const { User } = require("../models");
+const User = require("../models/user.model");
+const ChatRoom = require("../models/chatRoom.model")
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const getRoomId = async (req) => {
   const receiver = req.body?.receiver;
@@ -121,5 +124,4 @@ const getChatRecord = async (req) => {
 module.exports = {
   getRoomId,
   getChatRecord,
-  removeCollect,
 };

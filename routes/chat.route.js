@@ -11,7 +11,7 @@ router.route("/chat-record").get(auth(), chatController.getChatRecord);
 router.post(
   "/room-info",
   auth(),
-  validate(chatValidation.getRoomInfo()),
+  validate(chatValidation.getRoomInfo),
   chatController.getRoomId
 );
 

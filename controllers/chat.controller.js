@@ -4,7 +4,7 @@ const chatService = require("../services/chat.service");
 const config = require("../config/config");
 
 const getRoomId = catchAsync(async (req, res) => {
-  const data = await chatService.getCollect(req);
+  const data = await chatService.getRoomId(req);
   res.status(httpStatus.CREATED).send({
     data,
     message: "成功",
