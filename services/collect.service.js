@@ -1,6 +1,6 @@
 const { User } = require("../models");
 const getCollect = async (req) => {
-  const user = userBody._id;
+  const user = req.user._id;
   const collect = await User.findById(user).select("collect");
   return collect;
 };

@@ -1,12 +1,7 @@
 const { User } = require("../models");
-const getCollect = async (req) => {
-  const user = userBody._id;
-  const collect = await User.findById(user).select("collect");
-  return collect;
-};
 
 const getRoomId = async (req) => {
-  const receiver = req.params?.receiverId;
+  const receiver = req.body?.receiver;
   const sender = req.user._id;
   if (!receiver) {
     throw new ApiError(httpStatus.BAD_REQUEST, "未填寫聊天對象使用者id");
@@ -54,18 +49,77 @@ const getRoomId = async (req) => {
   }
 };
 
-const removeCollect = async (req) => {
-  const taskId = req.params?.taskId;
-  const userId = req.user._id;
-  const collect = await User.findByIdAndUpdate(
-    { _id: userId },
-    { $pull: { collect: taskId } }
-  );
-  return collect;
-};
+const getChatRecord = async (req) => {
+    const user = req.user._id;
+    const queryResult = await User.aggregate([
+        { $match: { _id: user } },
+        {
+          $project: { chatRecord: 1 },
+        },
+        {
+          $unwind: "$chatRecord",
+        },
+        {
+          $lookup: {
+            from: "chatrooms",
+            let: {
+              roomId: "$chatRecord.roomId",
+              chatRecord: "$chatRecord",
+            },
+            pipeline: [
+              { $match: { $expr: { $eq: ["$_id", "$$roomId"] } } },
+              {
+                $project: { messages: 1, _id: 0 },
+              },
+              // { $replaceRoot: { newRoot: { $mergeObjects: [ $message , $$ROOT] } } }
+              {
+                $replaceRoot: {
+                  newRoot: { message: { $slice: ["$messages", -1] } },
+                },
+              },
+            ],
+            as: "message",
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            let: {
+              receiverId: "$chatRecord.receiver",
+              chatRecord: "$chatRecord",
+            },
+            pipeline: [
+              { $match: { $expr: { $eq: ["$_id", "$$receiverId"] } } },
+              {
+                $project: { avatar: 1, name: 1, _id: 0 },
+              },
+            ],
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$message",
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              message: "$message.message",
+              avatar: "$user.avatar",
+              name: "$user.name",
+              roomId: "$chatRecord.roomId",
+            },
+          },
+        },
+      ]);
+
+      return queryResult;
+  };
 
 module.exports = {
   getRoomId,
-  addCollect,
+  getChatRecord,
   removeCollect,
 };
