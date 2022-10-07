@@ -61,6 +61,9 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
+  // return User.findOne({_id: id}).populate({
+  //     path: "collect",
+  //   })
   return User.findById(id).populate({
     path: "collect",
   })

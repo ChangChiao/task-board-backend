@@ -5,6 +5,7 @@ const taskRoute = require('./task.route');
 const orderRoute = require('./order.route');
 const collectRoute = require('./collect.route');
 const linePayRoute = require('./linepay.route');
+const chatRoute = require('./chat.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -31,6 +32,10 @@ const defaultRoutes = [
   {
     path: '/linepay',
     route: linePayRoute,
+  },
+  {
+    path: '/chat',
+    route: chatRoute,
   },
 ];
 

@@ -136,7 +136,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.plugin(toJSON);
+// userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
 //TODO schema檢查
