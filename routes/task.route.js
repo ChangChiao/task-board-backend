@@ -10,7 +10,7 @@ const router = express.Router();
 router
   .route('/')
   .get(taskController.getTask)
-  .post(auth(),upload.single("cover"), taskController.createTask)
+  .post(auth(), upload.single("cover"), taskController.createTask)
 
 
 router
