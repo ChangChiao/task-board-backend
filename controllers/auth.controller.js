@@ -90,7 +90,7 @@ const sendVerificationEmail = catchAsync(async (req, res) => {
 
 const verifyEmail = catchAsync(async (req, res) => {
   const user = await authService.verifyEmail(req.query.code)
-  console.log('user', user);
+  // console.log('user', user);
   if (!user) {
     return res.sendFile(
       path.join(__dirname, "../public/emailCheckFailed.html")

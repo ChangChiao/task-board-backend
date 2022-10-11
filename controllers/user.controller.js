@@ -14,7 +14,7 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUser = catchAsync(async (req, res) => {
-  console.log('user', req.user)
+  // console.log('user', req.user)
   const userId = req.user?._id;
   const user = await userService.getUserById(userId);
   if (!user) {

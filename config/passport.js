@@ -44,13 +44,12 @@ const jwtVerify = async (payload, done) => {
     //   throw new Error('Invalid token type');
     // }
     const user = await User.findById(payload.id);
-    console.log('user', user);
+    // console.log('user', user);
     if (!user) {
       return done(null, false);
     }
     done(null, user);
   } catch (error) {
-    console.log('7777');
     done(error, false);
   }
 };

@@ -13,7 +13,6 @@ const bcrypt = require('bcrypt');
  */
 const createUser = async (userBody) => {
   const userData = await User.findOne({ email: userBody.email });
-  console.log('userData', userData);
   if (userData?.activeStatus === 'normal' || userData?.activeStatus === 'both') {
     throw new ApiError(httpStatus.BAD_REQUEST, "信箱已經註冊");
   }
