@@ -88,6 +88,20 @@ const getFavorite = async (req) => {
       },
     },
     {
+      $unwind: "$collect",
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "collect.author",
+        foreignField: "_id",
+        as: "collect.author",
+      },
+    },
+    {
+      $unwind: "$collect.author",
+    },
+    {
       $replaceRoot: { newRoot: { $mergeObjects: ['$collect'] } },
     },
   ]);

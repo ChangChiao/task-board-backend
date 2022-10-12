@@ -209,6 +209,9 @@ const getUserCreateTaskList = async (req) => {
       },
     },
     {
+      $unwind: "$taskList.staff",
+    },
+    {
       $project: {
         "taskList.staff.contact": 0,
         "taskList.staff.email": 0,
@@ -218,14 +221,17 @@ const getUserCreateTaskList = async (req) => {
         "taskList.staff.createTaskList": 0,
       },
     },
+    // {
+    //   $group: {
+    //     _id: "$_id",
+    //     taskList: { $push: "$taskList" },
+    //   },
+    // },
     {
-      $group: {
-        _id: "$_id",
-        taskList: { $push: "$taskList" },
-      },
+      $replaceRoot: { newRoot: { $mergeObjects: ['$taskList'] } },
     },
   ]);
-  return task?.[0]?.taskList ?? [];
+  return task ?? [];
 };
 
 const getUserApplyTaskList = async (req) => {
@@ -274,6 +280,9 @@ const getUserApplyTaskList = async (req) => {
       },
     },
     {
+      $unwind: "$taskList.author",
+    },
+    {
       $project: {
         "taskList.author.email": 0,
         "taskList.author.password": 0,
@@ -282,15 +291,18 @@ const getUserApplyTaskList = async (req) => {
         "taskList.author.createTaskList": 0,
       },
     },
+    // {
+    //   $group: {
+    //     _id: "$_id",
+    //     taskList: { $push: "$taskList" },
+    //   },
+    // },
     {
-      $group: {
-        _id: "$_id",
-        taskList: { $push: "$taskList" },
-      },
+      $replaceRoot: { newRoot: { $mergeObjects: ['$taskList'] } },
     },
   ]);
 
-  return task?.[0]?.taskList ?? [];
+  return task ?? [];
 };
 
 module.exports = {
