@@ -4,8 +4,8 @@ const { User } = require("../models");
 const ApiError = require("../utils/ApiError");
 const emailService = require("./email.service");
 const config = require("../config/config");
-const tokenService = require("./token.service")
-const bcrypt = require('bcrypt');
+const tokenService = require("./token.service");
+const bcrypt = require("bcrypt");
 /**
  * Create a user
  * @param {Object} userBody
@@ -13,11 +13,14 @@ const bcrypt = require('bcrypt');
  */
 const createUser = async (userBody) => {
   const userData = await User.findOne({ email: userBody.email });
-  if (userData?.activeStatus === 'normal' || userData?.activeStatus === 'both') {
+  if (
+    userData?.activeStatus === "normal" ||
+    userData?.activeStatus === "both"
+  ) {
     throw new ApiError(httpStatus.BAD_REQUEST, "信箱已經註冊");
   }
-  console.log('emailService', emailService);
-  console.log('tokenService--', tokenService);
+  console.log("emailService", emailService);
+  console.log("tokenService--", tokenService);
   const activeCode = tokenService.generateVerifyCode(userBody.email);
   const mailObj = {
     subject: "[TaskBoard]帳號啟用確認信",
@@ -26,17 +29,17 @@ const createUser = async (userBody) => {
   };
 
   const password = await bcrypt.hash(userBody.password, 12);
-  let user = {}
+  let user = {};
   if (!userData) {
-    userBody.name = `使用者${uuid.v1()}`
-    userBody.password = password
+    userBody.name = `使用者${uuid.v1()}`;
+    userBody.password = password;
     user = await User.create(userBody);
   } else {
     user = await User.findByIdAndUpdate(userData._id, { password });
   }
 
   await emailService.sendEmail(mailObj);
-  
+
   return user;
 };
 
@@ -65,21 +68,45 @@ const getUserById = async (id) => {
   //   })
   return User.findById(id).populate({
     path: "collect",
-  })
+  });
+};
+
+const getFavorite = async (req) => {
+  const userId = req.user._id;
+  const task = User.aggregate([
+    {
+      $match: {
+        _id: { $eq: userId },
+      },
+    },
+    {
+      $lookup: {
+        from: "tasks",
+        localField: "collect",
+        foreignField: "_id",
+        as: "collect",
+      },
+    },
+    {
+      $replaceRoot: { newRoot: { $mergeObjects: ['$collect'] } },
+    },
+  ]);
+  console.log("66666", task);
+  return task;
 };
 
 /**
  * check user emailVerified
- * @param {string} email 
+ * @param {string} email
  * @returns {Boolean}
  */
 const checkUserStatus = async (email) => {
-    const result = await User.findOne({ email }).select("isEmailVerified");
-    if(!result){
-        throw new Error(`您尚未驗證信箱`);
-    }
-    return result
-}
+  const result = await User.findOne({ email }).select("isEmailVerified");
+  if (!result) {
+    throw new Error(`您尚未驗證信箱`);
+  }
+  return result;
+};
 
 /**
  * Get user by email
@@ -87,7 +114,7 @@ const checkUserStatus = async (email) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email, field) => {
-  return User.findOne({ email }).select(field);;
+  return User.findOne({ email }).select(field);
 };
 
 /**
@@ -98,17 +125,17 @@ const getUserByEmail = async (email, field) => {
  */
 const updateUserById = async (req) => {
   const userId = req.user._id;
-  const { name, contact } = req.body
+  const { name, contact } = req.body;
   // if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
-    //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
-    // }
-  if(name){
-    await User.findByIdAndUpdate({_id: userId}, {name})
+  //   throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
+  // }
+  if (name) {
+    await User.findByIdAndUpdate({ _id: userId }, { name });
   }
-  if(contact){
-    await User.findByIdAndUpdate({_id: userId}, {contact})
+  if (contact) {
+    await User.findByIdAndUpdate({ _id: userId }, { contact });
   }
-  const user = User.findById(userId)
+  const user = User.findById(userId);
   return user;
 };
 
@@ -130,6 +157,7 @@ module.exports = {
   createUser,
   queryUsers,
   getUserById,
+  getFavorite,
   checkUserStatus,
   getUserByEmail,
   updateUserById,

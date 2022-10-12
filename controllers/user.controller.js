@@ -39,6 +39,15 @@ const getUserById = catchAsync(async (req, res) => {
   });
 });
 
+const getFavorite = catchAsync(async (req, res) => {
+  const list = await userService.getFavorite(req);
+  res.send({
+    data: list,
+    message: "成功",
+    status: "success",
+  });
+});
+
 const updateUser = catchAsync(async (req, res) => {
   const user = await userService.updateUserById(req);
   res.send({
@@ -62,4 +71,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  getFavorite,
 };
