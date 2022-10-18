@@ -34,8 +34,10 @@ const envVarsSchema = Joi.object()
     LINE_PAY_SECRET: Joi.string().description("secretKey for linePay"),
     LINE_PAY_VERSION: Joi.string().description("version for linePay"),
     LINE_PAY_SITE: Joi.string().description("api url for linePay"),
-    CALLBACK_URL: Joi.string().description("callbackurl for oauth"),
-    FRONTEND_URL: Joi.string().description("website url"),
+    CALLBACK_URL_DEV: Joi.string().description("dev callbackurl for oauth"),
+    CALLBACK_URL_PRD: Joi.string().description("prd callbackurl for oauth"),
+    FRONTEND_URL_DEV: Joi.string().description("dev website url"),
+    FRONTEND_URL_PRD: Joi.string().description("prd website url"),
   })
   .unknown();
 
@@ -90,6 +92,6 @@ module.exports = {
     version: envVars.LINE_PAY_VERSION,
     url: envVars.LINE_PAY_SITE
   },
-  callback: envVars.CALLBACK_URL,
-  frontEnd: envVars.FRONTEND_URL,
+  callback: envVars.NODE_ENV === "development" ?  envVars.CALLBACK_URL_DEV : envVars.CALLBACK_URL_PRD,
+  frontEnd: envVars.NODE_ENV === "development" ? envVars.FRONTEND_URL_DEV : envVars.FRONTEND_URL_PRD
 };
