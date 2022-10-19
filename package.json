@@ -46,6 +46,7 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@vercel/node": "^2.5.26",
     "cross-env": "^7.0.3",
     "eslint-config-airbnb-base": "^15.0.0",
     "nodemon": "^2.0.16"
