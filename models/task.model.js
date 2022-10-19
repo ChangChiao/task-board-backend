@@ -17,6 +17,11 @@ const taskSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  unit:{
+    type: Number,
+    enum: [0, 1], //0每次 1每小時
+    default: 0
+  },
   status:{
     type: Number,
     default: 0,
