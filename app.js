@@ -45,6 +45,10 @@ passport.use('jwt', jwtStrategy);
 app.use('/v1', routes);
 
 
+app.get('/', (req, res) => {
+  res.sendFile('index.html', {root: path.join(__dirname, 'public')});
+})
+
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
 });
