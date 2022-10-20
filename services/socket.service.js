@@ -103,7 +103,7 @@ module.exports = function (server) {
     // 監聽 client發來的訊息
     socket.on("chatMessage", async (msg) => {
       const { message } = msg;
-      const createdAt = Date.now();
+      const createdAt = new Date().toISOString();
       await ChatRoom.findByIdAndUpdate(room, {
         $push: { messages: { sender: userId, message, createdAt } },
       });
