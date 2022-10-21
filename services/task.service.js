@@ -5,15 +5,22 @@ const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
 const httpStatus = require("http-status");
 
+const setOrder= (self, target, order) => {
+  if(self === target) return  order === "desc" ? -1 : 1
+  return -1;
+}
+
 const getTask = async (req) => {
-  const { order, city, keyword } = req.query;
+  const { sortOrder, sortBy, city, keyword } = req.query;
   console.log("keyword", city, keyword);
+  console.log("req.query", req.query);
   // const task = Task.find()
   const pipeline = [
     {
       $sort: {
         status: 1,
-        reward: order === "desc" ? -1 : 1,
+        reward: setOrder("reward", sortOrder, sortBy),
+        expire: setOrder("expire", sortOrder, sortBy),
         isVip: -1,
         expire: -1,
       },
@@ -56,7 +63,7 @@ const getTask = async (req) => {
       },
     });
   }
-  const task = Task.aggregate(pipeline);
+  const task = await Task.aggregate(pipeline);
   console.log("task===", task);
   return task;
 };

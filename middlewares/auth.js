@@ -6,7 +6,7 @@ const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
   // console.log('err', err);
   if (err || info || !user) {
     console.log("66666", info);
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate"));
+    return reject(new ApiError(httpStatus.UNAUTHORIZED, "請重新登入"));
   }
   req.user = user;
   resolve();
