@@ -20,6 +20,7 @@ const getTask = async (req) => {
       $sort: {
         status: 1,
         isVip: -1,
+        expire: -1,
       },
     },
     {
@@ -64,6 +65,7 @@ const getTask = async (req) => {
     pipeline.push({
       $sort: {
         expire: sortOrder === "desc" ? -1 : 1,
+        reward: -1,
       },
     });
   }
