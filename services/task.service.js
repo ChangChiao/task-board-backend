@@ -5,24 +5,21 @@ const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
 const httpStatus = require("http-status");
 
-const setOrder= (self, target, order) => {
-  if(self === target) return  order === "desc" ? -1 : 1
+const setOrder = (self, target, order) => {
+  console.log("self, target, order", self, target, order);
+  if (self === target) return order === "desc" ? -1 : 1;
   return -1;
-}
+};
 
 const getTask = async (req) => {
   const { sortOrder, sortBy, city, keyword } = req.query;
   console.log("keyword", city, keyword);
-  console.log("req.query", req.query);
   // const task = Task.find()
   const pipeline = [
     {
       $sort: {
         status: 1,
-        reward: setOrder("reward", sortOrder, sortBy),
-        expire: setOrder("expire", sortOrder, sortBy),
         isVip: -1,
-        expire: -1,
       },
     },
     {
@@ -63,6 +60,21 @@ const getTask = async (req) => {
       },
     });
   }
+  if (sortBy === "expire") {
+    pipeline.push({
+      $sort: {
+        expire: sortOrder === "desc" ? -1 : 1,
+      },
+    });
+  }
+
+  if (sortBy === "reward") {
+    pipeline.push({
+      $sort: {
+        reward: sortOrder === "desc" ? -1 : 1,
+      },
+    });
+  }
   const task = await Task.aggregate(pipeline);
   console.log("task===", task);
   return task;
@@ -76,10 +88,6 @@ const getUserTask = async (req) => {
     populate: { path: "applicant", select: "name avatar" },
   });
 
-  // const task = await User.find({ author: userId, status }).populate({
-  //   path: "createTaskList.applicant",
-  //   select: "name avatar"
-  // });
   return task;
 };
 
@@ -235,7 +243,7 @@ const getUserCreateTaskList = async (req) => {
     //   },
     // },
     {
-      $replaceRoot: { newRoot: { $mergeObjects: ['$taskList'] } },
+      $replaceRoot: { newRoot: { $mergeObjects: ["$taskList"] } },
     },
   ]);
   return task ?? [];
@@ -305,7 +313,7 @@ const getUserApplyTaskList = async (req) => {
     //   },
     // },
     {
-      $replaceRoot: { newRoot: { $mergeObjects: ['$taskList'] } },
+      $replaceRoot: { newRoot: { $mergeObjects: ["$taskList"] } },
     },
   ]);
 
