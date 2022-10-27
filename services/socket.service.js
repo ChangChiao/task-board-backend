@@ -82,7 +82,7 @@ module.exports = function (server) {
       console.log("connection----", room);
       room && socket.join(room);
       let userId = await getUserId(token);
-      userId = userId.toString();
+      userId = userId && userId.toString();
       const clients = io
         .of("/chat")
         .adapter.rooms.get("62863bf54025f20e3d376b34");

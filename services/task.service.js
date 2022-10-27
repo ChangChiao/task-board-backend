@@ -182,6 +182,7 @@ const deleteTask = async (req) => {
 
 const getUserCreateTaskList = async (req) => {
   const userId = req.user._id;
+  console.log("userId", userId)
   const task = await User.aggregate([
     {
       $match: {
@@ -226,7 +227,10 @@ const getUserCreateTaskList = async (req) => {
       },
     },
     {
-      $unwind: "$taskList.staff",
+      $unwind:{
+        "path": "$taskList.staff",
+        "preserveNullAndEmptyArrays": true
+      }
     },
     {
       $project: {

@@ -1,15 +1,16 @@
 const User = require("../models/user.model");
 const ChatRoom = require("../models/chatRoom.model")
 const mongoose = require("mongoose");
+const httpStatus = require("http-status");
+const ApiError = require("../utils/ApiError");
 const ObjectId = mongoose.Types.ObjectId;
-
 const getRoomId = async (req) => {
   const receiver = req.body?.receiver;
   const sender = req.user._id;
   if (!receiver) {
     throw new ApiError(httpStatus.BAD_REQUEST, "未填寫聊天對象使用者id");
   }
-  if (sender === receiver) {
+  if (sender.toString() === receiver) {
     throw new ApiError(httpStatus.BAD_REQUEST, "自己不能跟自己聊天！");
   }
   const receiverUser = await User.findById(receiver);
