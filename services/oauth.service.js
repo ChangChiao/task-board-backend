@@ -12,6 +12,7 @@ const thirdPartyRedirect = (user, res) => {
     httpOnly: false,
     path: "/",
     sameSite: "none",
+    maxAge: 8640000,
     secure: process.env.NODE_ENV === 'production',
     // domain:
     //   process.env.NODE_ENV === "development"
