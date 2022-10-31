@@ -4,15 +4,12 @@ const catchAsync = require("../utils/catchAsync");
 const { taskService } = require("../services");
 const getTask = catchAsync(async (req, res) => {
   const taskList = await taskService.getTask(req);
-  res.cookie("test", "11", {
+  res.cookie("test", "1111", {
     httpOnly: false,
     path: "/",
     sameSite: "none",
-    secure:  process.env.NODE_ENV === "development",
-    domain:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : ".vercel.app",
+    maxAge: 8640000,
+    secure: process.env.NODE_ENV === 'production',
   });
   res.status(httpStatus.OK).send({
     data: taskList,
