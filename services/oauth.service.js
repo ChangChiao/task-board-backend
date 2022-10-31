@@ -13,10 +13,10 @@ const thirdPartyRedirect = (user, res) => {
     path: "/",
     sameSite: "none",
     secure: process.env.NODE_ENV === 'production',
-    domain:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://task-board-theta.vercel.app/",
+    // domain:
+    //   process.env.NODE_ENV === "development"
+    //     ? "http://localhost:3000"
+    //     : "https://task-board-theta.vercel.app/",
   });
   // res.cookie("token", token , {httpOnly: false, secure: false});
   res.redirect(path);
