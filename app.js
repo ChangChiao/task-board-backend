@@ -24,10 +24,20 @@ app.use(express.urlencoded({ extended: false }));
 // gzip compression
 app.use(compression());
 
+const allowedOrigins = ["https://task-board-theta.vercel.app", "http://localhost:3000"]
+
 // enable cors
 const corsOptions = {
-  origin: (origin, callback) => {
-    callback(null, true);
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Access-Control-Allow-Origin", "Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
