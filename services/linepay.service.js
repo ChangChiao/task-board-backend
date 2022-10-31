@@ -4,7 +4,6 @@ const Base64 = require("crypto-js/enc-base64");
 const { Order } = require("../models");
 const User = require("../models/user.model");
 const { default: axios } = require("axios");
-const { log } = require("../config/logger");
 
 const orders = {
   amount: 299,

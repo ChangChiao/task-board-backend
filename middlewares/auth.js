@@ -3,9 +3,8 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
-  // console.log('err', err);
   if (err || info || !user) {
-    console.log("66666", info);
+    console.log("error", info);
     return reject(new ApiError(httpStatus.UNAUTHORIZED, "請重新登入"));
   }
   req.user = user;

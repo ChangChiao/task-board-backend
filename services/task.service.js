@@ -1,15 +1,8 @@
 const { Task, User } = require("../models");
-const mongoose = require("mongoose");
 const config = require("../config/config");
 const ApiError = require("../utils/ApiError");
 const { ImgurClient } = require("imgur");
 const httpStatus = require("http-status");
-
-const setOrder = (self, target, order) => {
-  console.log("self, target, order", self, target, order);
-  if (self === target) return order === "desc" ? -1 : 1;
-  return -1;
-};
 
 const getTask = async (req) => {
   const { sortOrder, sortBy, city, keyword } = req.query;
