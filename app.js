@@ -28,6 +28,7 @@ const allowedOrigins = ["https://task-board-theta.vercel.app", "http://localhost
 
 // enable cors
 const corsOptions = {
+  credentials: true,
   origin: function(origin, callback){
     // allow requests with no origin 
     // (like mobile apps or curl requests)
@@ -41,7 +42,6 @@ const corsOptions = {
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Access-Control-Allow-Origin", "Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
-  credentials: true
 };
 app.use(cors(corsOptions));
 app.options(config.frontEnd, cors());
