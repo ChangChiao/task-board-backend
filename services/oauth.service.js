@@ -8,6 +8,7 @@ const thirdPartyRedirect = (user, res) => {
   const token = generateToken(user, res);
   let path = `${config.frontEnd}`;
   res.cookie("token", token , {httpOnly: false, sameSite: 'none', secure: false});
+  // res.cookie("token", token , {httpOnly: false, secure: false});
   res.redirect(path);
 };
 

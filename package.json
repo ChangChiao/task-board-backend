@@ -22,7 +22,7 @@
     "crypto-js": "^4.1.1",
     "debug": "^2.6.9",
     "dotenv": "^16.0.1",
-    "express": "^4.16.4",
+    "express": "^4.18.1",
     "express-validator": "^6.14.1",
     "http-status": "^1.5.2",
     "imgur": "^2.2.0",
