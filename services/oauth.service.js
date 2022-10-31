@@ -12,7 +12,7 @@ const thirdPartyRedirect = (user, res) => {
     httpOnly: false,
     path: "/",
     sameSite: "none",
-    secure:  process.env.NODE_ENV !== "development",
+    secure: true,
     domain:
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
