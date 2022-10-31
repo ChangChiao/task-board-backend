@@ -4,6 +4,16 @@ const catchAsync = require("../utils/catchAsync");
 const { taskService } = require("../services");
 const getTask = catchAsync(async (req, res) => {
   const taskList = await taskService.getTask(req);
+  res.cookie("test", "11", {
+    httpOnly: false,
+    path: "/",
+    sameSite: "none",
+    secure:  process.env.NODE_ENV === "development",
+    domain:
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://task-board-theta.vercel.app",
+  });
   res.status(httpStatus.OK).send({
     data: taskList,
     message: "成功",
