@@ -12,13 +12,9 @@ const thirdPartyRedirect = (user, res) => {
     path: "/",
     sameSite: "none",
     secure:  process.env.NODE_ENV !== "development",
-    domain:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3008"
-        : "https://task-board-backend.vercel.app",
   });
   // res.cookie("token", token , {httpOnly: false, secure: false});
-  res.redirect(path);
+  res.redirect(path + `?${token}`);
 };
 
 const thirdPartySignIn = async (thirdPartyName, data, res) => {
