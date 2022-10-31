@@ -7,7 +7,7 @@ const { generateToken } = require("./token.service");
 const thirdPartyRedirect = (user, res) => {
   const token = generateToken(user, res);
   let path = `${config.frontEnd}`;
-  res.cookie("token", token , {httpOnly: false, sameSite: 'none', secure: false});
+  res.cookie("token", token , {httpOnly: false, sameSite: 'none', secure: false, domain: process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://task-board-theta.vercel.app"});
   // res.cookie("token", token , {httpOnly: false, secure: false});
   res.redirect(path);
 };
