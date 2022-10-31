@@ -35,7 +35,7 @@ const unexpectedErrorHandler = (error) => {
 };
 
 process.on("uncaughtException", unexpectedErrorHandler);
-process.on("unhandledRejection", unexpectedErrorHandler);
+process.on("unhandledRejection", unexpectedErrorHandapler);
 
 process.on("SIGTERM", () => {
   logger.info("SIGTERM received");

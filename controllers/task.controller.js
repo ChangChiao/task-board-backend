@@ -12,7 +12,7 @@ const getTask = catchAsync(async (req, res) => {
     domain:
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "vercel.app",
+        : ".vercel.app",
   });
   res.status(httpStatus.OK).send({
     data: taskList,
