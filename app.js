@@ -28,18 +28,7 @@ const allowedOrigins = ["https://task-board-theta.vercel.app", "http://localhost
 
 // enable cors
 const corsOptions = {
-  origin: function(origin, callback){
-    // allow requests with no origin 
-    // (like mobile apps or curl requests)
-    if(!origin) return callback(null, true);
-    console.log("origin", origin)
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
+  origin: ["https://task-board-theta.vercel.app", "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Access-Control-Allow-Origin", "Origin", "X-Requested-With", "x-csrf-token", "Content-Type", "Accept", "Authorization"],
   credentials: true,
