@@ -7,8 +7,9 @@ const { generateToken } = require("./token.service");
 const thirdPartyRedirect = (user, res) => {
   const token = generateToken(user, res);
   let path = `${config.frontEnd}`;
+  console.log("process.env.NODE_ENV==", process.env.NODE_ENV)
   res.cookie("token", token, {
-    httpOnly: true,
+    httpOnly: false,
     path: "/",
     sameSite: "none",
     secure:  process.env.NODE_ENV !== "development",
