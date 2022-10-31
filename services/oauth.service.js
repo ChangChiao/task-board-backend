@@ -16,7 +16,7 @@ const thirdPartyRedirect = (user, res) => {
     domain:
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : ".vercel.app",
+        : "https://task-board-theta.vercel.app/",
   });
   // res.cookie("token", token , {httpOnly: false, secure: false});
   res.redirect(path);
