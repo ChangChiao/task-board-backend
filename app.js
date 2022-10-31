@@ -43,6 +43,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Access-Control-Allow-Origin", "Origin", "X-Requested-With", "x-csrf-token", "Content-Type", "Accept", "Authorization"],
   credentials: true,
+  exposedHeaders: ['Set-Cookie', 'Date', 'ETag']
 };
 app.use(cors(corsOptions));
 app.options(config.frontEnd, cors());
