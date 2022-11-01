@@ -14,10 +14,10 @@ const thirdPartyRedirect = (user, res) => {
     sameSite: "none",
     maxAge: 8640000,
     secure: process.env.NODE_ENV === 'production',
-    domain:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : ".vercel.app",
+    // domain:
+    //   process.env.NODE_ENV === "development"
+    //     ? "http://localhost:3000"
+    //     : ".vercel.app",
   });
   // res.cookie("token", token , {httpOnly: false, secure: false});
   res.redirect(path);
