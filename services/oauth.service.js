@@ -6,12 +6,11 @@ const { generateToken } = require("./token.service");
 
 const thirdPartyRedirect = (user, res) => {
   const token = generateToken(user, res);
-  let path = `${config.frontEnd}`;
-  console.log("process.env.NODE_ENV==", process.env.NODE_ENV)
+  let path = `${config.frontEnd}?token=${token}`;
   res.cookie("token", token, {
     httpOnly: false,
     path: "/",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
     maxAge: 8640000,
     secure: process.env.NODE_ENV === 'production',
     // domain:
